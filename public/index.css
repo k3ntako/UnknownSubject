@@ -1,0 +1,45 @@
+html{
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body{
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+  overflow-x: hidden;
+}
+
+h1{
+  font-size: 3.5rem;
+}
+
+h2{
+  font-size: 2.8rem;
+}
+
+h3{
+  font-size: 2rem;
+}
+
+h4{
+  font-size: 1.5rem;
+}
+
+h5{
+  font-size: 1.25rem;
+}
+
+a{
+  cursor: pointer;
+}
+
+.section{
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 1rem;
+}
