@@ -1,0 +1,48 @@
+.title{
+  font-family: 'Lobster', cursive;
+}
+
+.cards{
+  font-family: 'Jura', sans-serif;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 2rem;
+}
+
+.card{
+  display: flex;
+  justify-content: center;
+  border-radius: 5px;
+  border: 1px solid gray;
+  background-color: #efe9f4;
+  font-size: 1.2rem;
+}
+
+.card > div{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.name{
+  flex: 1;
+  margin-left: -1rem; /* centers text in card */
+}
+
+.count, .plusButton, .minusButton{
+  padding: 1rem;
+  width: 1rem;
+}
+
+.plusButton{
+  color: #fff;
+  background-color: #57a773;
+}
+.minusButton{
+  color: #fff;
+  background-color: #ee6352;
+}
+.disabled{
+  background-color: #696969;
+}
