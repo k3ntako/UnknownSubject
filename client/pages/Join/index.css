@@ -1,0 +1,52 @@
+.joinPage{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.form{
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* background: linear-gradient(-45deg, #FF9DE6, #FDC7D7, #A5D8F3, #E8E500); */
+  background: linear-gradient(-45deg, #09FBD3, #08F7FE, #FF9DE6, #FE53BB, #F5D300);
+  background-size: 400% 400%;
+  animation: move-bg 10s ease-in-out infinite;
+}
+
+@keyframes move-bg {
+  0%{
+    background-position: 0 50%;
+  }
+  50%{
+    background-position: 100% 50%;
+  }
+  100%{
+    background-position: 0 50%;
+  }
+}
+
+.joinPage input, .joinPage input{
+  padding: 1rem;
+  width: 400px;
+  font-size: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.joinPage button{
+  border: 1px #fff solid;
+  color: #fff;
+  padding: 0.5rem 1.5rem;
+  font-size: 1.5rem;
+  background-color: rgba(0,0,0,0.2);
+}
+
+.joinPage button:hover{
+  background-color: rgba(0,0,0,0.5);
+}
