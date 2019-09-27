@@ -14,7 +14,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* background: linear-gradient(-45deg, #FF9DE6, #FDC7D7, #A5D8F3, #E8E500); */
   background: linear-gradient(-45deg, #09FBD3, #08F7FE, #FF9DE6, #FE53BB, #F5D300);
   background-size: 400% 400%;
   animation: move-bg 10s ease-in-out infinite;
@@ -47,6 +46,38 @@
   background-color: rgba(0,0,0,0.2);
 }
 
-.joinPage button:hover{
+.joinPage button:hover:enabled{
   background-color: rgba(0,0,0,0.5);
+}
+
+.joinPage button:disabled{
+  color: #000;
+  border: 1px #000 solid;
+}
+
+.joinPage input.shake{
+  animation: shake 0.5s ease-in-out, turn-red 1s;
+  border-color: red;
+}
+
+@keyframes shake {
+  0% { transform: rotate(0deg); }
+  10% { transform: rotate(-1deg); }
+  20% { transform: rotate(1deg); }
+  30% { transform: rotate(0deg); }
+  40% { transform: rotate(1deg); }
+  50% { transform: rotate(-1deg); }
+  60% { transform: rotate(0deg); }
+  70% { transform: rotate(-1deg); }
+  80% { transform: rotate(1deg); }
+  90% { transform: rotate(0deg); }
+  100% { transform: rotate(-1deg); }
+}
+
+@keyframes turn-red {
+  0% { background-color: #fff; }
+  25% { background-color: #ffebeb); }
+  50% { background-color: #ffdbdb; }
+  75% { background-color: #ffebeb; }
+  100% { background-color: #fff; }
 }
