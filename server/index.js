@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const { models, sequelize } = require('./models');
 
 // Express Set-up
 const app = express();
@@ -52,12 +51,7 @@ if( !res.headersSent ){
   }
 });
 
-// Connect to db and start server
-// REMOVE FORCE BEFORE DEPLOYING
-// ADD MIGRARTIONS AS REPLACEMENT
-const dropDatabaseOnStart = true;
-sequelize.sync({ force: dropDatabaseOnStart }).then(async () => {
-  server.listen( process.env.PORT || 3000, function() {
-    console.log('Server started at port 3000');
-  });
+
+server.listen( process.env.PORT || 3000, function() {
+  console.log('Server started at port 3000');
 });
