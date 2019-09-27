@@ -6,6 +6,20 @@ const { models, sequelize } = require('./models');
 
 // Express Set-up
 const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+
+// Socket.IO
+io.on('connection', function (socket) {
+  socket.on('join', function (data) {
+    const { name, room } = data;
+    if( name && name.trim() && room && room.trim() ){
+      socket.emit('onJoin', { success: true, socketId: socket.id });
+    }else{
+      socket.emit('onJoin', { success: false, message: "Both a name and Room ID are required" });
+    }
+  });
+});
 
 // Express Middleware
 app.use(bodyParser.json())
@@ -43,7 +57,7 @@ if( !res.headersSent ){
 // ADD MIGRARTIONS AS REPLACEMENT
 const dropDatabaseOnStart = true;
 sequelize.sync({ force: dropDatabaseOnStart }).then(async () => {
-  app.listen( process.env.PORT || 3000, function() {
+  server.listen( process.env.PORT || 3000, function() {
     console.log('Server started at port 3000');
   });
 });
