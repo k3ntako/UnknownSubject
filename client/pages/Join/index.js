@@ -9,13 +9,13 @@ class Join extends Component {
     super(props);
     this.state = {
       name: "",
-      room: "",
+      roomId: "",
       joining: false,
       shake: false,
     }
 
     this.onNameChange = this.onChange.bind(this, "name");
-    this.onRoomChange = this.onChange.bind(this, "room");
+    this.onRoomChange = this.onChange.bind(this, "roomId");
     this._nameInput = null;
     this._roomInput = null;
   }
@@ -47,17 +47,17 @@ class Join extends Component {
   }
 
   join = () => {
-    const  { name, room } = this.state;
+    const  { name, roomId } = this.state;
     socket.emit('join', {
       name: name.trim(),
-      room: room.trim(),
+      roomId: roomId.trim(),
     });
   }
 
   valid(){
-    const { name, room, joining } = this.state;
+    const { name, roomId, joining } = this.state;
 
-    return !joining && !!(name && name.trim()) && !!(room && room.trim());
+    return !joining && !!(name && name.trim()) && !!(roomId && roomId.trim());
   }
 
   nameKeyPress = (e) => {
@@ -75,9 +75,9 @@ class Join extends Component {
   }
 
   render(){
-    const { name, room, shake } = this.state;
+    const { name, roomId, shake } = this.state;
     const nameShakeClass = shake && !name.trim() ? styles.shake : "";
-    const roomShakeClass = shake && !room.trim() ? styles.shake : "";
+    const roomShakeClass = shake && !roomId.trim() ? styles.shake : "";
 
     return <div className={styles.joinPage}>
       <div className={styles.form}>
@@ -93,7 +93,7 @@ class Join extends Component {
           ref={ref => this._roomInput = ref}
           className={roomShakeClass}
           type="text"
-          value={room}
+          value={roomId}
           onChange={this.onRoomChange}
           placeholder="Room code"
           onKeyPress={this.roomKeyPress} />
