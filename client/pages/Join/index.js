@@ -23,7 +23,7 @@ class Join extends Component {
   componentDidMount(){
     socket.on('onJoin', (data) => {
       if( data.success ){
-        this.props.history.push('/home');
+        this.props.history.push('/setup');
       }else{
         console.error("Failed to join session") //add error banner
       }

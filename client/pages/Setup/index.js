@@ -3,7 +3,7 @@ import CharacterCards from './CharacterCards';
 
 import styles from './index.css';
 
-export default class Home extends Component {
+export default class SetupPage extends Component {
   constructor(props){
     super(props);
     this.state = {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styles from './index.css';
 
-export default class Home extends Component {
+export default class CharacterCard extends Component {
   constructor(props){
     super(props);
     this.state = {};
