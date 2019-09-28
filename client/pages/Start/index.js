@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import socket from '../../utilities/socket-io';
 import styles from './index.css';
 
-class Join extends Component {
+class StartPage extends Component {
   constructor(props){
     super(props);
     const name = props.location.state && props.location.state.name || "";
@@ -145,4 +145,4 @@ class Join extends Component {
   }
 }
 
-export default withRouter(Join);
+export default withRouter(StartPage);
