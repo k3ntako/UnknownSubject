@@ -21,7 +21,7 @@ io.on('connection', function (socket) {
     const { name } = data;
     const user = users.addUser(name, socket.id); //create user if valid
     if( user ){
-      const roomId = games.createGame(user);
+      const roomId = games.createGame(user.id);
       users.addUserToRoom(user.id, roomId);
       socket.emit('onJoin', { success: true, socketId: socket.id, userId: user.id, roomId });
     }else{
@@ -31,7 +31,7 @@ io.on('connection', function (socket) {
 
   socket.on('join', function (data) {
     const { name, roomId } = data;
-    if( !!(roomId && roomId.trim().length === 6) ){
+    if( !!(roomId && roomId.trim().length !== 6) ){
       return socket.emit('onJoin', { success: false, message: "Invalid room id" });
     }
 
@@ -39,12 +39,12 @@ io.on('connection', function (socket) {
       return socket.emit('onJoin', { success: false, message: "Unable to join room" });
     }
 
-    const user = users.addUser(name, socket.id, room); //create user if valid
+    const user = users.addUser(name, socket.id, roomId); //create user if valid
     if( !user ){
       return socket.emit('onJoin', { success: false, message: "Unable to create user" });
     }
 
-    games.joinGame(user.id, roomId.trim());
+    games.joinGame(roomId.trim(), user.id);
 
     socket.emit('onJoin', { success: true, socketId: socket.id, userId: user.id, roomId });
   });
