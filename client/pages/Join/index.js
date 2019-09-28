@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 import socket from '../../utilities/socket-io';
 import styles from './index.css';
@@ -7,10 +7,12 @@ import styles from './index.css';
 class Join extends Component {
   constructor(props){
     super(props);
+    const name = props.location.state && props.location.state.name || "";
     this.state = {
-      name: "",
+      isCreatingNewGame: props.location.pathname === '/create',
+      name,
       roomId: "",
-      joining: false,
+      requestSent: false,
       shake: false,
     }
 
@@ -25,7 +27,7 @@ class Join extends Component {
       if( data.success ){
         this.props.history.push('/setup');
       }else{
-        console.error("Failed to join session") //add error banner
+        console.error("Failed to join session", data.message) //add error banner
       }
     });
   }
@@ -35,8 +37,9 @@ class Join extends Component {
   }
 
   onSubmit = () => {
+    const submitFunc = this.state.isCreatingNewGame ? this.create : this.join;
     if( this.valid() ){
-      this.setState({ joining: true }, this.join);
+      this.setState({ requestSent: true }, submitFunc);
     }else{
       this.setState({ shake: true }, () => setTimeout(this.stopShake, 1000));
     }
@@ -54,14 +57,28 @@ class Join extends Component {
     });
   }
 
-  valid(){
-    const { name, roomId, joining } = this.state;
+  create = () => {
+    const  { name } = this.state;
+    socket.emit('create', {
+      name: name.trim(),
+    });
+  }
 
-    return !joining && !!(name && name.trim()) && !!(roomId && roomId.trim());
+  valid(){
+    const { isCreatingNewGame, name, roomId, requestSent } = this.state;
+
+    if( isCreatingNewGame ){
+      return !requestSent && !!(name && name.trim());
+    }else{
+      return !requestSent && !!(name && name.trim()) && !!(roomId && roomId.trim());
+    }
+
   }
 
   nameKeyPress = (e) => {
-    if( e.key.toLowerCase() === 'enter'){
+    if( this.state.isCreatingNewGame && e.key.toLowerCase() === 'enter' ){
+      this.onSubmit();
+    }else if( e.key.toLowerCase() === 'enter' ){
       this._roomInput.focus()
     }
   }
@@ -75,29 +92,54 @@ class Join extends Component {
   }
 
   render(){
-    const { name, roomId, shake } = this.state;
+    const { isCreatingNewGame, name, roomId, shake } = this.state;
     const nameShakeClass = shake && !name.trim() ? styles.shake : "";
     const roomShakeClass = shake && !roomId.trim() ? styles.shake : "";
 
     return <div className={styles.joinPage}>
       <div className={styles.form}>
-        <input
-          ref={ref => this._nameInput = ref}
-          type="text"
-          className={nameShakeClass}
-          value={name}
-          onChange={this.onNameChange}
-          placeholder="Your name"
-          onKeyPress={this.nameKeyPress} />
-        <input
-          ref={ref => this._roomInput = ref}
-          className={roomShakeClass}
-          type="text"
-          value={roomId}
-          onChange={this.onRoomChange}
-          placeholder="Room code"
-          onKeyPress={this.roomKeyPress} />
-        <button disabled={!this.valid()} onClick={this.onSubmit}>Join!</button>
+        <div>
+          <h1>Unknown Subjects</h1>
+          <input
+            ref={ref => this._nameInput = ref}
+            type="text"
+            className={nameShakeClass}
+            value={name}
+            onChange={this.onNameChange}
+            placeholder="Your name"
+            onKeyPress={this.nameKeyPress} />
+          { !isCreatingNewGame && <input
+            ref={ref => this._roomInput = ref}
+            className={roomShakeClass}
+            type="text"
+            value={roomId}
+            onChange={this.onRoomChange}
+            placeholder="Room code"
+            onKeyPress={this.roomKeyPress} /> }
+
+          <button disabled={!this.valid()} onClick={this.onSubmit}>
+            { isCreatingNewGame ? "Create!" : "Join!" }
+          </button>
+
+          { !isCreatingNewGame && <div className={styles.bottomLink}>
+            <p>First one here?</p>
+            <Link to={{
+              pathname: "/create",
+              state: { name: this.state.name },
+            }}>
+              Create a game!
+            </Link>
+          </div> }
+          { isCreatingNewGame && <div className={styles.bottomLink}>
+            <p>Have a room code?</p>
+            <Link to={{
+              pathname: "/join",
+              state: { name: this.state.name },
+            }}>
+              Join an existing game here!
+            </Link>
+          </div> }
+        </div>
       </div>
     </div>
   }
