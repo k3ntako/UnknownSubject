@@ -1,5 +1,9 @@
 .title{
-  font-family: 'Lobster', cursive;
+  margin-bottom: 0;
+}
+
+.roomId{
+  font-size: 1.5rem;
 }
 
 .cards{
@@ -7,6 +11,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 2rem;
+  margin-top: 2rem;
 }
 
 .card{

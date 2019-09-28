@@ -25,7 +25,7 @@ class StartPage extends Component {
   componentDidMount(){
     socket.on('onJoin', (data) => {
       if( data.success ){
-        this.props.history.push('/setup');
+        this.props.history.push(`/room/${data.roomId}/setup`);
       }else{
         console.error("Failed to join session", data.message) //add error banner
       }

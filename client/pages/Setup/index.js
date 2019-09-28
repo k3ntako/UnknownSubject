@@ -7,6 +7,7 @@ export default class SetupPage extends Component {
   constructor(props){
     super(props);
     this.state = {
+      roomId: props.match.params.roomId, //TODO: verify that the room exists
       charList : {
         citizen: 0,
         jury_member: 0,
@@ -33,6 +34,7 @@ export default class SetupPage extends Component {
   render(){
     return <div className={"section"}>
       <h1 className={styles.title}>Unknown Subject</h1>
+      <span className={styles.roomId}>Room Code: <b>{this.state.roomId}</b></span>
       <CharacterCards
         charList={this.state.charList}
         onPlus={this.onPlus}

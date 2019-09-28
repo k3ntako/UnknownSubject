@@ -8,6 +8,6 @@ export default (props) => {
     <Route key="root" path="/" exact render={() => <Redirect to="/join"/> }/>
     <Route key="create" path="/create" exact component={StartPage} />
     <Route key="join" path="/join" exact component={StartPage} />
-    <Route key="setup" path="/setup" exact component={SetupPage} />
+    <Route key="setup" path="/room/:roomId/setup" exact component={SetupPage} />
   </Switch>
 }
