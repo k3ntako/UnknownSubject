@@ -1,4 +1,4 @@
-class Game {
+class Room {
   constructor(roomId, creatorId){
     this.roomId = roomId;
     this.creatorId = creatorId;
@@ -13,11 +13,11 @@ class Game {
     };
   }
 
-  joinGame(id){
+  joinRoom(id){
     this.users.push(id);
   }
 
-  leaveGame(id){
+  leaveRoom(id){
     let users;
 
     for(let i = 0; i < this.users.length; i++){
@@ -32,4 +32,4 @@ class Game {
 }
 
 
-module.exports = { Game };
+module.exports = { Room };

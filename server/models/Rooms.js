@@ -1,9 +1,9 @@
-const { Game } = require('./Game');
+const { Room } = require('./Room');
 const chars = '0123456789abcdef';
 
-class Games {
+class Rooms {
   constructor(){
-    this.games = [];
+    this.rooms = [];
     this.roomIds = [];
   }
 
@@ -23,33 +23,33 @@ class Games {
     return roomId;
   }
 
-  createGame(creatorId){
+  createRoom(creatorId){
     const roomId = this.generateRoomId();
-    const newGame = new Game(roomId, creatorId);
-    this.games.push(newGame);
+    const newRoom = new Room(roomId, creatorId);
+    this.rooms.push(newRoom);
     this.roomIds.push(roomId);
     return roomId;
   }
 
-  finishGame(roomId){
+  finishRoom(roomId){
     if( !this.roomIds.includes(roomId) ) return null;
-    this.games.filter(game => game.roomId !== roomId );
+    this.rooms.filter(room => room.roomId !== roomId );
     this.roomIds.filter(id => id !== roomId );
   }
 
-  getGame(roomId){
-    return this.games.find(game => game.roomId === roomId);
+  getRoom(roomId){
+    return this.rooms.find(room => room.roomId === roomId);
   }
 
   canJoin(roomId){
-    return !!this.games.find(game => game.roomId === roomId);
+    return !!this.rooms.find(room => room.roomId === roomId);
   }
 
-  joinGame(roomId, userId){
-    let game = this.games.find(game => game.roomId === roomId);
-    game.joinGame(userId);
+  joinRoom(roomId, userId){
+    let room = this.rooms.find(room => room.roomId === roomId);
+    room.joinRoom(userId);
   }
 }
 
 
-module.exports = { Games };
+module.exports = { Rooms };
