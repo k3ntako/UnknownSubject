@@ -9,6 +9,7 @@ body{
   margin: 0;
   font-size: 16px;
   overflow-x: hidden;
+  font-family: 'Josefin Sans', sans-serif;
 }
 
 h1{
@@ -32,7 +33,19 @@ h5{
 }
 
 a{
+  display: inline;
   cursor: pointer;
+  text-decoration: none;
+  color: #2980B9;
+}
+
+a:hover{
+  text-decoration: underline;
+  color: #154360;
+}
+
+input{
+  font-family: 'Josefin Sans', sans-serif;
 }
 
 .section{
