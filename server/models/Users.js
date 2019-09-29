@@ -10,23 +10,24 @@ class Users {
     if( !socketId ) throw new Error("Invalid socket ID");
 
     let user = {
-      name, socketId, roomId, id: generateUUID_V4(),
+      name, roomId, id: socketId,
     };
     this.users.push(user);
     return user;
   }
 
-  // removeUser(id){
-  //   let user;
-  //
-  //   for(let i = 0; i < this.users.length; i++){
-  //     if (this.users[i].id === id) {
-  //       user = this.users.splice(i, 1)[0];
-  //     }
-  //   }
-  //
-  //   return user;
-  // }
+  removeUser(id){
+    let user;
+
+    for(let i = 0; i < this.users.length; i++){
+      if (this.users[i].id === id) {
+        user = this.users.splice(i, 1)[0];
+        break;
+      }
+    }
+
+    // return user;
+  }
 
   addUserToRoom(userId, roomId){
     this.users.forEach(user => {

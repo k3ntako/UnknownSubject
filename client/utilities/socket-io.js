@@ -12,6 +12,10 @@ socket.on('userJoined', (data) => {
   users.addUsers( [data.user] );
 });
 
+socket.on('userLeft', (data) => {
+  users.removeUser( data.userId );
+})
+
 export {
   socket,
   setOnJoinCb,

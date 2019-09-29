@@ -53,6 +53,13 @@ class Rooms {
 
     return room;
   }
+
+  removeUser( id ){
+    for(let i = 0; i < this.rooms.length; i++){
+      const roomUserWasRemovedFrom = this.rooms[i].removeUser(id);
+      if( roomUserWasRemovedFrom ) break;
+    }
+  }
 }
 
 

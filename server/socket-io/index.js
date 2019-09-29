@@ -9,7 +9,7 @@ const validateRoomId = ( newRoomId ) => {
 }
 
 module.exports = (io, users, rooms) => {
-  io.on('connection', function (socket) {
+  io.on('connect', function (socket) {
     socket.on('create', function (data) {
       try{
         const { name } = data;
@@ -50,12 +50,19 @@ module.exports = (io, users, rooms) => {
         socket.join(sessionRoomId);
 
         //respond to front-end
-        socket.emit('onJoin', { success: true, socketId: socket.id, users: room.users, roomId: sessionRoomId });
+        socket.emit('onJoin', { success: true, users: room.users, roomId: sessionRoomId });
         socket.broadcast.to(sessionRoomId).emit('userJoined', { user: user });
       }catch( err ){
         console.error(err.message);
         socket.emit('onJoin', { success: false, message: err.message });
       }
+    });
+
+    socket.on('disconnect', function (data) {
+      users.removeUser(socket.id);
+      rooms.removeUser(socket.id);
+
+      io.to(sessionRoomId).emit('userLeft', { userId: socket.id });
     });
   });
 }
