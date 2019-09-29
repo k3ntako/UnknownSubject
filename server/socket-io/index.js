@@ -1,41 +1,61 @@
+let sessionRoomId = null;
+const validateRoomId = ( newRoomId ) => {
+  if( typeof newRoomId !== 'string' || !newRoomId.trim() ) throw new Error("Invalid room code");
+  if( newRoomId.trim().length !== 6 ) throw new Error("Room codes should be 6 characters long");
+  if( !newRoomId.match(/^([A-Fa-f0-9]{6})$/) ) throw new Error("Room codes should only consist 0 to 9 and a to f (hex color code)");
+
+  newRoomId.trim().toLowerCase();
+  return newRoomId;
+}
+
 module.exports = (io, users, rooms) => {
   io.on('connection', function (socket) {
     socket.on('create', function (data) {
-      const { name } = data;
-      const user = users.addUser(name, socket.id); //create user if valid
-      if( user ){
+      try{
+        const { name } = data;
+        //create user
+        const user = users.addUser(name, socket.id); //create user if valid
+        if( !user ) throw new Error("Unable to create new user");
+
+        //create room
         const room = rooms.createRoom(user);
-        users.addUserToRoom(user.id, room.id);
+        sessionRoomId = validateRoomId(room.id);
 
-        socket.join(room.id);
+        //add user to room
+        users.addUserToRoom(user.id, sessionRoomId);
+        socket.join(sessionRoomId);
 
-        socket.emit('onJoin', { success: true, users: [ user ], roomId: room.id });
-      }else{
-        socket.emit('onJoin', { success: false, message: "Both a name and Room ID are required" });
+        //respond to front-end
+        socket.emit('onJoin', { success: true, users: [ user ], roomId: sessionRoomId });
+      }catch( err ){
+        console.error(err.message);
+        socket.emit('onJoin', { success: false, message: err.message });
       }
     });
 
     socket.on('join', function (data) {
-      const { name, roomId } = data;
-      const roomIdTrimmed = roomId && roomId.trim();
-      if( !!(roomIdTrimmed && roomIdTrimmed.length !== 6) ){
-        return socket.emit('onJoin', { success: false, message: "Invalid room id" });
+      try{
+        const { name, roomId } = data;
+        sessionRoomId = validateRoomId(roomId);
+
+        //check if room is available
+        if( !rooms.canJoin(sessionRoomId) ) throw new Error("Room unavailable")
+
+        //create user
+        const user = users.addUser(name, socket.id, sessionRoomId);
+        if( !user ) throw new Error("Unable to add new user");
+
+        //join room
+        const room = rooms.joinRoom(sessionRoomId, user);
+        socket.join(sessionRoomId);
+
+        //respond to front-end
+        socket.emit('onJoin', { success: true, socketId: socket.id, users: room.users, roomId: sessionRoomId });
+        socket.broadcast.to(sessionRoomId).emit('userJoined', { user: user });
+      }catch( err ){
+        console.error(err.message);
+        socket.emit('onJoin', { success: false, message: err.message });
       }
-
-      if( !rooms.canJoin(roomIdTrimmed) ){
-        return socket.emit('onJoin', { success: false, message: "Unable to join room" });
-      }
-
-      const user = users.addUser(name, socket.id, roomIdTrimmed); //create user if valid
-      if( !user ){
-        return socket.emit('onJoin', { success: false, message: "Unable to create user" });
-      }
-
-      const room = rooms.joinRoom(roomIdTrimmed, user);
-      socket.join(roomIdTrimmed);
-
-      socket.emit('onJoin', { success: true, socketId: socket.id, users: room.users, roomId: roomIdTrimmed });
-      socket.broadcast.to(roomIdTrimmed).emit('userJoined', { user: user });
     });
   });
 }

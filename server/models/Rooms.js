@@ -24,6 +24,8 @@ class Rooms {
   }
 
   createRoom(creator){
+    if( !creator || !creator.id ) throw new Error("Invalid creator");
+
     const roomId = this.generateRoomId();
     const newRoom = new Room(roomId, creator);
     this.rooms.push(newRoom);

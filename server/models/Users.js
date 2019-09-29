@@ -6,13 +6,8 @@ class Users {
   }
 
   addUser(name, socketId, roomId = null){
-    if( !name || !name.trim() ){
-      console.error("Invalid name");
-      return null;
-    }else if( !socketId ){
-      console.error("Invalid socket ID");
-      return null;
-    }
+    if( !name || !name.trim() ) throw new Error("Invalid name");
+    if( !socketId ) throw new Error("Invalid socket ID");
 
     let user = {
       name, socketId, roomId, id: generateUUID_V4(),

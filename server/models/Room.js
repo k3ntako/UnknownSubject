@@ -14,6 +14,7 @@ class Room {
   }
 
   joinRoom(user){
+    if( !user || !user.id ) throw new Error("Invalid user");
     this.users.push(user);
   }
 
