@@ -1,5 +1,9 @@
 import io from 'socket.io-client';
-import game from '../models/Game';
+import store from '../redux/store';
+import GameReducer from '../redux/reducers/GameReducer';
+const addUsers = (users) => GameReducer.Methods.addUsers(store.dispatch)(users);
+const removeUser = (userId) => GameReducer.Methods.removeUser(store.dispatch)(userId);
+const updateOneCharCount = (characterId, count) => GameReducer.Methods.updateOneCharCount(store.dispatch)(characterId, count);
 
 const socket = io.connect(window.location.origin);
 
@@ -9,14 +13,14 @@ const removeOnJoinCb = () => onJoinCb = (d) => { console.error("No onJoinCb set"
 socket.on('onJoin', (data) => onJoinCb(data));
 
 socket.on('userJoined', (data) => {
-  game.addUsers( [data.user] );
+  addUsers( [ data.user ] );
 });
 
 socket.on('userLeft', (data) => {
-  game.removeUser( data.userId );
+  removeUser( data.userId );
 });
 
-socket.on('onChangeCount', (data) => game.onChangeCount(data.characterId, data.count));
+socket.on('onChangeCount', (data) => updateOneCharCount(data.characterId, data.count));
 
 export {
   socket,

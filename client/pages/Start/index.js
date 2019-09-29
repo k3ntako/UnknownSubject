@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import GameReducer from '../../redux/reducers/GameReducer';
 
 import { socket, setOnJoinCb, removeOnJoinCb } from '../../utilities/socket-io';
-import game from './../../models/Game';
 import styles from './index.css';
 
 class StartPage extends Component {
@@ -33,8 +34,8 @@ class StartPage extends Component {
 
   onJoin = ( data ) =>{
     if( data.success ){
-      game.addUsers(data.room.users);
-      game.onCharListChange(data.room.charList);
+      this.props.addUsers(data.room.users);
+      this.props.updateCharCounts(data.room.charList);
       this.props.history.push(`/room/${data.room.id}/setup`);
     }else{
       console.error("Failed to join session", data.message) //add error banner
@@ -154,4 +155,17 @@ class StartPage extends Component {
   }
 }
 
-export default withRouter(StartPage);
+
+const mapDispatchToProps = function(dispatch){
+  return {
+    addUsers: GameReducer.Methods.addUsers(dispatch),
+    updateCharCounts: GameReducer.Methods.updateCharCounts(dispatch),
+  };
+}
+
+export default withRouter(
+  connect(
+    null,
+    mapDispatchToProps
+  )(StartPage)
+);

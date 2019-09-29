@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import GameReducer from '../../redux/reducers/GameReducer';
 import CharacterCards from './CharacterCards';
 
 import { socket, setOnCharListChangeCb } from '../../utilities/socket-io';
-import game from './../../models/Game';
 import styles from './index.css';
 
-export default class SetupPage extends Component {
+class SetupPage extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -15,24 +17,18 @@ export default class SetupPage extends Component {
     this.onMinus = this.onChangeCount.bind(this, -1);
   }
 
-  componentDidMount(){
-    game.setOnUpdateCb(this.forceUpdate.bind(this));
-  }
-
-  componentWillUnmount(){
-    game.removeOnUpdateCb();
-  }
-
   onChangeCount = ( delta, characterId ) => {
-    game.onChangeCount(characterId, game.charList[characterId] + delta);
+    const newCount = this.props.characterList[ characterId ] + delta;
+    this.props.updateOneCharCount(characterId, newCount);
+
     socket.emit('changeCount', {
       characterId: characterId,
-      count: game.charList[characterId],
+      count: newCount,
     });
   }
 
   render(){
-    const namesArr = game.users.map(user => user.name);
+    const namesArr = this.props.users.map(user => user.name);
     const names = namesArr.join(", ")
 
     return <div className={"section"}>
@@ -42,9 +38,30 @@ export default class SetupPage extends Component {
         Players: { names }
       </div>
       <CharacterCards
-        charList={game.charList}
+        characterList={this.props.characterList}
         onPlus={this.onPlus}
         onMinus={this.onMinus} />
     </div>
   }
 }
+
+
+const mapStateToProps = function(state){
+  return {
+    characterList: state.game.characterList,
+    users: state.game.users,
+  }
+}
+
+const mapDispatchToProps = function(dispatch){
+  return {
+    updateOneCharCount: GameReducer.Methods.updateOneCharCount(dispatch),
+  };
+}
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(SetupPage)
+);
