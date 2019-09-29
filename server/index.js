@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const { Users } = require('./models/Users');
 const { Rooms } = require('./models/Rooms');
 const { Room } = require('./models/Room');
 
@@ -12,11 +11,10 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
 // Game Set-up
-const users = new Users(); // Replace with Redis?
 const rooms = new Rooms(); // Replace with Redis?
 
 // Socket.IO
-require('./socket-io')(io, users, rooms);
+require('./socket-io')(io, rooms);
 
 // Express Middleware
 app.use(bodyParser.json())

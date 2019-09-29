@@ -8,21 +8,24 @@ const validateRoomId = ( newRoomId ) => {
   return newRoomId;
 }
 
-module.exports = (io, users, rooms) => {
+module.exports = (io, rooms) => {
   io.on('connect', function (socket) {
     socket.on('create', function (data) {
       try{
         const { name } = data;
+        if( !name || !name.trim() ) throw new Error("Invalid name");
+
         //create user
-        const user = users.addUser(name, socket.id); //create user if valid
-        if( !user ) throw new Error("Unable to create new user");
+        const user = {
+          name: name,
+          id: socket.id,
+        };
 
         //create room
         const room = rooms.createRoom(user);
-        sessionRoomId = validateRoomId(room.id);
+        sessionRoomId = room.id;
 
         //add user to room
-        users.addUserToRoom(user.id, sessionRoomId);
         socket.join(sessionRoomId);
 
         //respond to front-end
@@ -42,8 +45,11 @@ module.exports = (io, users, rooms) => {
         if( !rooms.canJoin(sessionRoomId) ) throw new Error("Room unavailable")
 
         //create user
-        const user = users.addUser(name, socket.id, sessionRoomId);
-        if( !user ) throw new Error("Unable to add new user");
+        if( !name || !name.trim() ) throw new Error("Invalid name");
+        const user = {
+          name: name,
+          id: socket.id,
+        };
 
         //join room
         const room = rooms.joinRoom(sessionRoomId, user);
@@ -59,7 +65,6 @@ module.exports = (io, users, rooms) => {
     });
 
     socket.on('disconnect', function (data) {
-      users.removeUser(socket.id);
       rooms.removeUser(socket.id);
 
       io.to(sessionRoomId).emit('userLeft', { userId: socket.id });

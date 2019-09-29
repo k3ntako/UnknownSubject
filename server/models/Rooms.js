@@ -7,6 +7,7 @@ class Rooms {
     this.roomIds = [];
   }
 
+  // TODO: write tests for this
   generateRoomId(){
     let roomId = "";
     let isValid = false;
