@@ -13,13 +13,22 @@ class Room {
     };
   }
 
+  static validateRoomId( newRoomId ){
+    if( typeof newRoomId !== 'string' || !newRoomId.trim() ) throw new Error("Invalid room code");
+    if( newRoomId.trim().length !== 6 ) throw new Error("Room codes should be 6 characters long");
+    if( !newRoomId.match(/^([A-Fa-f0-9]{6})$/) ) throw new Error("Room codes should only consist 0 to 9 and a to f (hex color code)");
+
+    newRoomId.trim().toLowerCase();
+    return newRoomId;
+  }
+
   joinRoom(user){
     if( !user || !user.id ) throw new Error("Invalid user");
     this.users.push(user);
   }
 
   changeCount( characterId, count ){
-    this.charList[characterId];
+    this.charList[characterId] = count;
   }
 
   removeUser(id){

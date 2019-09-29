@@ -40,9 +40,9 @@ class Rooms {
   //   this.roomIds.filter(id => id !== roomId );
   // }
 
-  // getRoom(roomId){
-  //   return this.rooms.find(room => room.roomId === roomId);
-  // }
+  getRoom(roomId){
+    return this.rooms.find(room => room.id === roomId);
+  }
 
   canJoin(roomId){
     return !!this.rooms.find(room => room.id === roomId);

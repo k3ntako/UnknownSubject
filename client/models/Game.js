@@ -1,7 +1,25 @@
-class Users{
+class Game{
   constructor(){
+    this.charList = {
+      citizen: 0,
+      jury_member: 0,
+      witness: 0,
+      bail_bondsman: 0,
+      robber: 0,
+      bob: 0,
+    }
     this.users = [];
     this.onUpdate = () => {};
+  }
+
+  onCharListChange( newCharList ){
+    this.charList = Object.assign(this.charList, newCharList);
+    this.onUpdate();
+  }
+
+  onChangeCount(id, count){
+    this.charList[id] = count;
+    this.onUpdate();
   }
 
   addUsers( newUsers ){
@@ -32,5 +50,5 @@ class Users{
 
 }
 
-let users = new Users;
-export default users;
+let game = new Game;
+export default game;

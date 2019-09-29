@@ -8,7 +8,11 @@ const { Room } = require('./models/Room');
 // Express Set-up
 const app = express();
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {
+  pingTimeout: 60000,
+  // Google Chrome issue: default ping timeout (5000ms) is not long enough
+  // https://github.com/socketio/socket.io/issues/3259#issuecomment-448058937
+});
 
 // Game Set-up
 const rooms = new Rooms(); // Replace with Redis?

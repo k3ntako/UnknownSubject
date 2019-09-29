@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import CharacterCards from './CharacterCards';
 
-import users from './../../models/Users';
+import { socket, setOnCharListChangeCb } from '../../utilities/socket-io';
+import game from './../../models/Game';
 import styles from './index.css';
 
 export default class SetupPage extends Component {
@@ -9,39 +10,29 @@ export default class SetupPage extends Component {
     super(props);
     this.state = {
       roomId: props.match.params.roomId, //TODO: verify that the room exists
-      charList : {
-        citizen: 0,
-        jury_member: 0,
-        witness: 0,
-        bail_bondsman: 0,
-        robber: 0,
-        bob: 0,
-      },
     };
+    this.onPlus = this.onChangeCount.bind(this, 1);
+    this.onMinus = this.onChangeCount.bind(this, -1);
   }
 
   componentDidMount(){
-    users.setOnUpdateCb(this.forceUpdate.bind(this));
+    game.setOnUpdateCb(this.forceUpdate.bind(this));
   }
 
   componentWillUnmount(){
-    users.removeOnUpdateCb();
+    game.removeOnUpdateCb();
   }
 
-  onPlus = ( id ) => {
-    const newCharList = Object.assign({}, this.state.charList);
-    newCharList[id]++
-    this.setState({ charList: newCharList });
-  }
-
-  onMinus = ( id ) => {
-    const newCharList = Object.assign({}, this.state.charList);
-    newCharList[id]--
-    this.setState({ charList: newCharList });
+  onChangeCount = ( delta, characterId ) => {
+    game.onChangeCount(characterId, game.charList[characterId] + delta);
+    socket.emit('changeCount', {
+      characterId: characterId,
+      count: game.charList[characterId],
+    });
   }
 
   render(){
-    const namesArr = users.users.map(user => user.name);
+    const namesArr = game.users.map(user => user.name);
     const names = namesArr.join(", ")
 
     return <div className={"section"}>
@@ -51,7 +42,7 @@ export default class SetupPage extends Component {
         Players: { names }
       </div>
       <CharacterCards
-        charList={this.state.charList}
+        charList={game.charList}
         onPlus={this.onPlus}
         onMinus={this.onMinus} />
     </div>

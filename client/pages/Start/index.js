@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 
 import { socket, setOnJoinCb, removeOnJoinCb } from '../../utilities/socket-io';
-import users from './../../models/Users';
+import game from './../../models/Game';
 import styles from './index.css';
 
 class StartPage extends Component {
@@ -33,8 +33,9 @@ class StartPage extends Component {
 
   onJoin = ( data ) =>{
     if( data.success ){
-      users.addUsers(data.users);
-      this.props.history.push(`/room/${data.roomId}/setup`);
+      game.addUsers(data.room.users);
+      game.onCharListChange(data.room.charList);
+      this.props.history.push(`/room/${data.room.id}/setup`);
     }else{
       console.error("Failed to join session", data.message) //add error banner
     }
