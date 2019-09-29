@@ -4,9 +4,12 @@ module.exports = (io, users, rooms) => {
       const { name } = data;
       const user = users.addUser(name, socket.id); //create user if valid
       if( user ){
-        const roomId = rooms.createRoom(user.id);
-        users.addUserToRoom(user.id, roomId);
-        socket.emit('onJoin', { success: true, socketId: socket.id, userId: user.id, roomId });
+        const room = rooms.createRoom(user);
+        users.addUserToRoom(user.id, room.id);
+
+        socket.join(room.id);
+
+        socket.emit('onJoin', { success: true, users: [ user ], roomId: room.id });
       }else{
         socket.emit('onJoin', { success: false, message: "Both a name and Room ID are required" });
       }
@@ -14,22 +17,25 @@ module.exports = (io, users, rooms) => {
 
     socket.on('join', function (data) {
       const { name, roomId } = data;
-      if( !!(roomId && roomId.trim().length !== 6) ){
+      const roomIdTrimmed = roomId && roomId.trim();
+      if( !!(roomIdTrimmed && roomIdTrimmed.length !== 6) ){
         return socket.emit('onJoin', { success: false, message: "Invalid room id" });
       }
 
-      if( !rooms.canJoin(roomId.trim()) ){
+      if( !rooms.canJoin(roomIdTrimmed) ){
         return socket.emit('onJoin', { success: false, message: "Unable to join room" });
       }
 
-      const user = users.addUser(name, socket.id, roomId); //create user if valid
+      const user = users.addUser(name, socket.id, roomIdTrimmed); //create user if valid
       if( !user ){
         return socket.emit('onJoin', { success: false, message: "Unable to create user" });
       }
 
-      rooms.joinRoom(roomId.trim(), user.id);
+      const room = rooms.joinRoom(roomIdTrimmed, user);
+      socket.join(roomIdTrimmed);
 
-      socket.emit('onJoin', { success: true, socketId: socket.id, userId: user.id, roomId });
+      socket.emit('onJoin', { success: true, socketId: socket.id, users: room.users, roomId: roomIdTrimmed });
+      socket.broadcast.to(roomIdTrimmed).emit('userJoined', { user: user });
     });
   });
 }

@@ -23,31 +23,33 @@ class Rooms {
     return roomId;
   }
 
-  createRoom(creatorId){
+  createRoom(creator){
     const roomId = this.generateRoomId();
-    const newRoom = new Room(roomId, creatorId);
+    const newRoom = new Room(roomId, creator);
     this.rooms.push(newRoom);
     this.roomIds.push(roomId);
-    return roomId;
+    return newRoom;
   }
 
-  finishRoom(roomId){
-    if( !this.roomIds.includes(roomId) ) return null;
-    this.rooms.filter(room => room.roomId !== roomId );
-    this.roomIds.filter(id => id !== roomId );
-  }
+  // finishRoom(roomId){
+  //   if( !this.roomIds.includes(roomId) ) return null;
+  //   this.rooms.filter(room => room.roomId !== roomId );
+  //   this.roomIds.filter(id => id !== roomId );
+  // }
 
-  getRoom(roomId){
-    return this.rooms.find(room => room.roomId === roomId);
-  }
+  // getRoom(roomId){
+  //   return this.rooms.find(room => room.roomId === roomId);
+  // }
 
   canJoin(roomId){
-    return !!this.rooms.find(room => room.roomId === roomId);
+    return !!this.rooms.find(room => room.id === roomId);
   }
 
-  joinRoom(roomId, userId){
-    let room = this.rooms.find(room => room.roomId === roomId);
-    room.joinRoom(userId);
+  joinRoom(roomId, user){
+    let room = this.rooms.find(room => room.id === roomId);
+    room.joinRoom(user);
+
+    return room;
   }
 }
 

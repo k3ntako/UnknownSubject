@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import CharacterCards from './CharacterCards';
 
+import users from './../../models/Users';
 import styles from './index.css';
 
 export default class SetupPage extends Component {
@@ -19,6 +20,14 @@ export default class SetupPage extends Component {
     };
   }
 
+  componentDidMount(){
+    users.setOnUpdateCb(this.forceUpdate.bind(this));
+  }
+
+  componentWillUnmount(){
+    users.removeOnUpdateCb();
+  }
+
   onPlus = ( id ) => {
     const newCharList = Object.assign({}, this.state.charList);
     newCharList[id]++
@@ -32,9 +41,15 @@ export default class SetupPage extends Component {
   }
 
   render(){
+    const namesArr = users.users.map(user => user.name);
+    const names = namesArr.join(", ")
+
     return <div className={"section"}>
       <h1 className={styles.title}>Unknown Subject</h1>
-      <span className={styles.roomId}>Room Code: <b>{this.state.roomId}</b></span>
+      <div className={styles.roomId}>Room Code: <b>{this.state.roomId}</b></div>
+      <div className={styles.roomId}>
+        Players: { names }
+      </div>
       <CharacterCards
         charList={this.state.charList}
         onPlus={this.onPlus}

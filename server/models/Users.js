@@ -21,17 +21,17 @@ class Users {
     return user;
   }
 
-  removeUser(id){
-    let user;
-
-    for(let i = 0; i < this.users.length; i++){
-      if (this.users[i].id === id) {
-        user = this.users.splice(i, 1)[0];
-      }
-    }
-
-    return user;
-  }
+  // removeUser(id){
+  //   let user;
+  //
+  //   for(let i = 0; i < this.users.length; i++){
+  //     if (this.users[i].id === id) {
+  //       user = this.users.splice(i, 1)[0];
+  //     }
+  //   }
+  //
+  //   return user;
+  // }
 
   addUserToRoom(userId, roomId){
     this.users.forEach(user => {
@@ -41,14 +41,14 @@ class Users {
     })
   }
 
-  getUser(id){
-    return this.users.filter(user => user.id === id)[0];
-  }
-
-  getUserList(roomId){
-    let users = this.users.filter(user => user.roomId === roomId);
-    return users.map(user => user.name);
-  }
+  // getUser(id){
+  //   return this.users.filter(user => user.id === id)[0];
+  // }
+  //
+  // getUserList(roomId){
+  //   let users = this.users.filter(user => user.roomId === roomId);
+  //   return users.map(user => user.name);
+  // }
 }
 
 

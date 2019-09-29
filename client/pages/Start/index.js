@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 
-import socket from '../../utilities/socket-io';
+import { socket, setOnJoinCb, removeOnJoinCb } from '../../utilities/socket-io';
+import users from './../../models/Users';
 import styles from './index.css';
 
 class StartPage extends Component {
@@ -23,13 +24,20 @@ class StartPage extends Component {
   }
 
   componentDidMount(){
-    socket.on('onJoin', (data) => {
-      if( data.success ){
-        this.props.history.push(`/room/${data.roomId}/setup`);
-      }else{
-        console.error("Failed to join session", data.message) //add error banner
-      }
-    });
+    setOnJoinCb( this.onJoin );
+  }
+
+  componentWillUnmount(){
+    removeOnJoinCb();
+  }
+
+  onJoin = ( data ) =>{
+    if( data.success ){
+      users.addUsers(data.users);
+      this.props.history.push(`/room/${data.roomId}/setup`);
+    }else{
+      console.error("Failed to join session", data.message) //add error banner
+    }
   }
 
   onChange = (field, e) => {
