@@ -3,7 +3,7 @@ const chars = '0123456789abcdef';
 
 class Rooms {
   constructor(){
-    this.rooms = [];
+    this.rooms = {};
     this.roomIds = [];
   }
 
@@ -13,7 +13,7 @@ class Rooms {
     let isValid = false;
     let count = 0;
     while( !isValid && count < 600 ){
-      roomId += chars[Math.floor(Math.random()*16)];
+      roomId += chars[ Math.floor( Math.random() * 16 ) ];
       isValid = roomId.length === 6 && !this.roomIds.includes(roomId);
       if(!isValid && roomId.length >= 6) roomId = "";
       count++;
@@ -29,7 +29,7 @@ class Rooms {
 
     const roomId = this.generateRoomId();
     const newRoom = new Room(roomId, creator);
-    this.rooms.push(newRoom);
+    this.rooms[roomId] = newRoom;
     this.roomIds.push(roomId);
     return newRoom;
   }
@@ -41,24 +41,23 @@ class Rooms {
   // }
 
   getRoom(roomId){
-    return this.rooms.find(room => room.id === roomId);
+    return this.rooms[roomId];
   }
 
   canJoin(roomId){
-    return !!this.rooms.find(room => room.id === roomId);
+    return !!this.rooms[roomId];
   }
 
   joinRoom(roomId, user){
-    let room = this.rooms.find(room => room.id === roomId);
+    let room = this.rooms[roomId];
     room.joinRoom(user);
 
     return room;
   }
 
-  removeUser( id ){
-    for(let i = 0; i < this.rooms.length; i++){
-      const roomUserWasRemovedFrom = this.rooms[i].removeUser(id);
-      if( roomUserWasRemovedFrom ) break;
+  removeUser( roomId, id ){
+    if( roomId && id ){
+      this.rooms[roomId].removeUser(id);
     }
   }
 }

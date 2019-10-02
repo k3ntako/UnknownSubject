@@ -1,6 +1,6 @@
 module.exports = (sessionState, io, socket, rooms) => {
   socket.on('disconnect', function (reason) {
-    rooms.removeUser(socket.id);
+    rooms.removeUser(sessionState.roomId, socket.id);
 
     io.to(sessionState.roomId).emit('userLeft', { userId: socket.id });
   });
