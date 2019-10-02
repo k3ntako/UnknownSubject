@@ -41,6 +41,9 @@ class SetupPage extends Component {
         characterList={this.props.characterList}
         onPlus={this.onPlus}
         onMinus={this.onMinus} />
+      <div className={styles.beginButtonWrapper}>
+        <button onClick={this.begin}>Begin!</button>
+      </div>
     </div>
   }
 }
