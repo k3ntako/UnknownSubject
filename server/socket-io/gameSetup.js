@@ -1,14 +1,14 @@
-module.exports = (sessionState, socket, rooms) => {
+module.exports = (socket, rooms) => {
   socket.on('changeCount', function (data) {
     try{
       const { characterId, count } = data;
       if( !characterId || !characterId.trim() ) throw new Error("Invalid character ID");
       if( typeof count !== "number" ) throw new Error("Invalid count of characters");
 
-      const room = rooms.getRoom( sessionState.roomId );
+      const room = rooms.getRoom( socket.gameSession.roomId );
       room.changeCount( characterId, count );
 
-      socket.to( sessionState.roomId ).emit('onChangeCount', { success: true, characterId, count });
+      socket.to( socket.gameSession.roomId ).emit('onChangeCount', { success: true, characterId, count });
     }catch( err ){
       console.error(err.message);
       socket.emit('onChangeCount', { success: false, message: err.message });
@@ -21,14 +21,19 @@ module.exports = (sessionState, socket, rooms) => {
   // server emits allPlayersLoaded once everyone loaded
 
   socket.on('beginGame', function (data) {
-    socket.broadcast.to(sessionState.roomId).emit('beginningGame');
+    socket.broadcast.to(socket.gameSession.roomId).emit('beginningGame');
   });
 
   socket.on('playerLoaded', function (data) {
-    const allPlayersLoaded = rooms[ sessionState.roomId ].playerLoaded( sessionState.userId );
+    let allPlayersLoaded = false;
+    if( rooms.rooms[ socket.gameSession.roomId ] ){
+      allPlayersLoaded = rooms.rooms[ socket.gameSession.roomId ].playerLoaded( socket.gameSession.userId );
+    }else{
+      console.error("Room doesn't exist");
+    }
 
     if( allPlayersLoaded ){
-      socket.to(sessionState.roomId).emit('allPlayersLoaded');
+      socket.to(socket.gameSession.roomId).emit('allPlayersLoaded');
     }
   });
 

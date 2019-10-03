@@ -1,10 +1,10 @@
-module.exports = (sessionState, io, socket, rooms) => {
+module.exports = (io, socket, rooms) => {
   socket.on('disconnect', function (reason) {
-    rooms.removeUser(sessionState.roomId, socket.id);
+    rooms.removeUser(socket.gameSession.roomId, socket.id);
 
-    io.to(sessionState.roomId).emit('userLeft', { userId: socket.id });
+    io.to(socket.gameSession.roomId).emit('userLeft', { userId: socket.id });
 
-    sessionState.userId = null;
-    sessionState.roomId = null;
+    socket.gameSession.userId = null;
+    socket.gameSession.roomId = null;
   });
 }
