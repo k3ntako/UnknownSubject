@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import GameReducer from '../../redux/reducers/GameReducer';
+import RoomReducer from '../../redux/reducers/RoomReducer';
 
 import socket, { setOnJoinCb, removeOnJoinCb } from '../../utilities/socket-io';
 import styles from './index.css';
@@ -158,7 +159,7 @@ class StartPage extends Component {
 
 const mapDispatchToProps = function(dispatch){
   return {
-    addUsers: GameReducer.Methods.addUsers(dispatch),
+    addUsers: RoomReducer.Methods.addUsers(dispatch),
     updateCharCounts: GameReducer.Methods.updateCharCounts(dispatch),
   };
 }

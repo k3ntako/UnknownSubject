@@ -52,7 +52,7 @@ class SetupPage extends Component {
 const mapStateToProps = function(state){
   return {
     characterList: state.game.characterList,
-    users: state.game.users,
+    users: state.room.users,
   }
 }
 

@@ -1,8 +1,8 @@
-import GameReducer from '../redux/reducers/GameReducer';
+import RoomReducer from '../redux/reducers/RoomReducer';
 import store from '../redux/store';
 
 const initialize = ( socket ) => {
-  const removeUser = (userId) => GameReducer.Methods.removeUser(store.dispatch)(userId);
+  const removeUser = (userId) => RoomReducer.Methods.removeUser(store.dispatch)(userId);
 
   socket.on('userLeft', (data) => {
     removeUser( data.userId );
