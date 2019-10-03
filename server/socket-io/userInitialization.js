@@ -11,6 +11,7 @@ module.exports = (sessionState, socket, rooms) => {
         name: name,
         id: socket.id,
       };
+      sessionState.userId = user.id;
 
       //create room
       const room = rooms.createRoom(user);
@@ -41,6 +42,7 @@ module.exports = (sessionState, socket, rooms) => {
         name: name,
         id: socket.id,
       };
+      sessionState.userId = user.id;
 
       //join room
       const room = rooms.joinRoom(sessionState.roomId, user);

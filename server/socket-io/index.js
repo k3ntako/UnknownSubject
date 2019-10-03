@@ -1,5 +1,6 @@
 let sessionState = {
   roomId: null,
+  userId: null,
 };
 
 module.exports = (io, rooms) => {
