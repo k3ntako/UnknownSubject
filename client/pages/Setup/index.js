@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import GameReducer from '../../redux/reducers/GameReducer';
 import CharacterCards from './CharacterCards';
 
-import socket, { setOnCharListChangeCb } from '../../utilities/socket-io';
+import socket, { setOnBeginningGameCb, removeOnBeginningGameCb } from '../../utilities/socket-io';
 import styles from './index.css';
 
 class SetupPage extends Component {
@@ -17,6 +17,14 @@ class SetupPage extends Component {
     this.onMinus = this.onChangeCount.bind(this, -1);
   }
 
+  componentDidMount(){
+    setOnBeginningGameCb(this.onBeginningGame);
+  }
+
+  componentWillUnmount(){
+    removeOnBeginningGameCb();
+  }
+
   onChangeCount = ( delta, characterId ) => {
     const newCount = this.props.characterList[ characterId ] + delta;
     this.props.updateOneCharCount(characterId, newCount);
@@ -25,6 +33,15 @@ class SetupPage extends Component {
       characterId: characterId,
       count: newCount,
     });
+  }
+
+  begin = () => {
+    socket.emit('beginGame');
+    this.onBeginningGame();
+  }
+
+  onBeginningGame = () => {
+    this.props.history.push(`/room/${this.state.roomId}/game`);
   }
 
   render(){

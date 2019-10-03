@@ -11,6 +11,7 @@ initializeUserDisconnection( socket );
 
 import initializeGameSetup from './gameSetup';
 initializeGameSetup( socket );
+export { setOnBeginningGameCb, removeOnBeginningGameCb } from './gameSetup';
 
 
 export default socket;
