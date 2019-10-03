@@ -3,6 +3,8 @@ class Room {
     this.id = id;
     this.creatorId = creator.id;
     this.users = [ creator ];
+    this.userIds = [ creator.id ];
+    this.loadedUsers = [];
     this.charList = {
       citizen: 0,
       jury_member: 0,
@@ -25,6 +27,7 @@ class Room {
   joinRoom(user){
     if( !user || !user.id ) throw new Error("Invalid user");
     this.users.push(user);
+    this.userIds.push(user.id);
   }
 
   changeCount( characterId, count ){
@@ -32,17 +35,46 @@ class Room {
   }
 
   removeUser(id){
-    let user;
-
-    for(let i = 0; i < this.users.length; i++){
-      if (this.users[i].id === id) {
-        user = this.users.splice(i, 1)[0];
-        break;
-      }
+    if( this.creator === id ){
+      // TODO: end game for everyone?
     }
 
-    return user;
+    const userExists = this.userIds.includes(id);
+    if( userExists ){
+      this.users = this.users.filter(user => user.id !== id);
+      this.users = this.userIds.filter(userId => userId !== id);
+      this.loadedUsers = this.loadedUsers.filter(user => user.id !== id);
+    }
+
+    return userExists;
+
+    //old way (TODO: test which is faster)
+    //benefit: one less loop
+    //drawback: each loop is more expensive
+    // let user;
+    //
+    // for(let i = 0; i < this.users.length; i++){
+    //   if (this.users[i].id === id) {
+    //     user = this.users.splice(i, 1)[0];
+    //     break;
+    //   }
+    // }
+    //
+    // if( user ){
+    //   this.userIds
+    // }
+
+    // return user;
   }
+
+  playerLoaded(id){
+    if( !this.loadedUsers.includes(id)){
+      this.loadedUsers.push(id);
+    }
+
+    return this.loadedUsers.length === this.users.length;
+  }
+
 
 }
 

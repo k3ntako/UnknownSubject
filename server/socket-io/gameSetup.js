@@ -14,4 +14,23 @@ module.exports = (sessionState, socket, rooms) => {
       socket.emit('onChangeCount', { success: false, message: err.message });
     }
   });
+
+  // leader emits beginGame
+  // server emits beginningGame
+  // players emit playerLoaded and wait for others to load
+  // server emits allPlayersLoaded once everyone loaded
+
+  socket.on('beginGame', function (data) {
+    socket.broadcast.to(sessionState.roomId).emit('beginningGame');
+  });
+
+  socket.on('playerLoaded', function (data) {
+    const allPlayersLoaded = rooms[ sessionState.roomId ].playerLoaded( sessionState.userId );
+
+    if( allPlayersLoaded ){
+      socket.to(sessionState.roomId).emit('allPlayersLoaded');
+    }
+  });
+
+
 }
