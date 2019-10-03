@@ -3,7 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import GameReducer from '../../redux/reducers/GameReducer';
 
-import { socket, setOnJoinCb, removeOnJoinCb } from '../../utilities/socket-io';
+import socket, { setOnJoinCb, removeOnJoinCb } from '../../utilities/socket-io';
 import styles from './index.css';
 
 class StartPage extends Component {

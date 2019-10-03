@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { socket } from './utilities/socket-io';
+import socket from './utilities/socket-io';
 
 
 class ReRouter extends Component{
