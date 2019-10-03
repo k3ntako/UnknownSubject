@@ -1,4 +1,4 @@
-module.exports = (socket, rooms) => {
+module.exports = (io, socket, rooms) => {
   socket.on('changeCount', function (data) {
     try{
       const { characterId, count } = data;
@@ -21,7 +21,7 @@ module.exports = (socket, rooms) => {
   // server emits allPlayersLoaded once everyone loaded
 
   socket.on('beginGame', function (data) {
-    socket.broadcast.to(socket.gameSession.roomId).emit('beginningGame');
+    socket.to(socket.gameSession.roomId).emit('beginningGame');
   });
 
   socket.on('playerLoaded', function (data) {
@@ -33,7 +33,7 @@ module.exports = (socket, rooms) => {
     }
 
     if( allPlayersLoaded ){
-      socket.to(socket.gameSession.roomId).emit('allPlayersLoaded');
+      io.in(socket.gameSession.roomId).emit('allPlayersLoaded');
     }
   });
 

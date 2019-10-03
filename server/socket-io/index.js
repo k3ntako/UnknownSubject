@@ -5,8 +5,8 @@ module.exports = (io, rooms) => {
       userId: null,
     }
 
-    require('./userInitialization')(socket, rooms);
+    require('./userInitialization')(io, socket, rooms);
     require('./userDisconnection')(io, socket, rooms);
-    require('./gameSetup')(socket, rooms);
+    require('./gameSetup')(io, socket, rooms);
   });
 }

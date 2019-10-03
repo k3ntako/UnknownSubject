@@ -1,6 +1,6 @@
 const { Room } = require('../models/Room');
 
-module.exports = (socket, rooms) => {
+module.exports = (io, socket, rooms) => {
   socket.on('create', function (data) {
     try{
       const { name } = data;
@@ -50,7 +50,7 @@ module.exports = (socket, rooms) => {
 
       //respond to front-end
       socket.emit('onJoin', { success: true, room: room });
-      socket.broadcast.to(socket.gameSession.roomId).emit('userJoined', { user: user });
+      socket.to(socket.gameSession.roomId).emit('userJoined', { user: user });
     }catch( err ){
       console.error(err.message);
       socket.emit('onJoin', { success: false, message: err.message });

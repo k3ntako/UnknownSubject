@@ -8,11 +8,11 @@ const removeOnBeginningGameCb = () => onBeginningGameCb = (d) => { console.error
 
 const initialize = ( socket ) => {
   socket.on('onChangeCount', (data) => {
-    GameReducer.Methods.updateOneCharCount(store.dispatch)(characterId, count);
+    GameReducer.Methods.updateOneCharCount(store.dispatch)(data.characterId, data.count);
   });
 
-  socket.on('beginningGame', (data) => onBeginningGameCb());
-  socket.on('allPlayersLoaded', (data) => {
+  socket.on('beginningGame', () => onBeginningGameCb());
+  socket.on('allPlayersLoaded', () => {
     RoomReducer.Methods.setAllPlayersLoaded(store.dispatch)( true );
   });
 
