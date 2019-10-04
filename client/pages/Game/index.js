@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import GameReducer from '../../redux/reducers/GameReducer';
 
 import Card from './Card';
-import socket from '../../utilities/socket-io';
+import socket from '../../socket-io';
 import styles from './index.css';
 
 class GamePage extends Component {

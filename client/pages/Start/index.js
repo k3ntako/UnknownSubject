@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import GameReducer from '../../redux/reducers/GameReducer';
 import RoomReducer from '../../redux/reducers/RoomReducer';
 
-import socket, { setOnJoinCb, removeOnJoinCb } from '../../utilities/socket-io';
+import socket, { setOnJoinCb, removeOnJoinCb } from '../../socket-io';
 import styles from './index.css';
 
 class StartPage extends Component {

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import GameReducer from '../../redux/reducers/GameReducer';
 import CharacterCards from './CharacterCards';
 
-import socket, { setOnBeginningGameCb, removeOnBeginningGameCb } from '../../utilities/socket-io';
+import socket, { setOnBeginningGameCb, removeOnBeginningGameCb } from '../../socket-io';
 import styles from './index.css';
 
 class SetupPage extends Component {
