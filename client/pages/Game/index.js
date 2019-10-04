@@ -39,9 +39,18 @@ class GamePage extends Component {
       <div className={styles.cards}>
         { this.props.users.map(user => <Card
           key={user.id}
-          user={user}
+          id={user.id}
+          text={user.name}
           selected={selected}
-          onCardClick={this.onCardClick} />) }
+          onCardClick={this.onCardClick} /> )}
+      </div>
+      <div className={styles.cards}>
+        { this.props.unassignedRoles.map(role => <Card
+          key={role.id}
+          id={role.id}
+          text={role.role}
+          selected={selected}
+          onCardClick={this.onCardClick} /> )}
       </div>
     </div>
   }
@@ -53,19 +62,13 @@ const mapStateToProps = function(state){
     allPlayersLoaded: state.room.allPlayersLoaded,
     characterList: state.game.characterList,
     users: state.room.users,
+    unassignedRoles: state.room.unassignedRoles,
   }
 }
-
-// const mapDispatchToProps = function(dispatch){
-//   return {
-//
-//   };
-// }
 
 export default withRouter(
   connect(
     mapStateToProps,
-    // mapDispatchToProps
     null
   )(GamePage)
 );

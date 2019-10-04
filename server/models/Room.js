@@ -7,7 +7,7 @@ class Room {
     this.users = [ creator ];
     this.userIds = [ creator.id ];
     this.loadedUsers = [];
-    this.charList = {
+    this.characterList = {
       citizen: 0,
       jury_member: 0,
       witness: 0,
@@ -33,7 +33,7 @@ class Room {
   }
 
   changeCount( characterId, count ){
-    this.charList[characterId] = count;
+    this.characterList[characterId] = count;
   }
 
   removeUser(id){
@@ -76,8 +76,8 @@ class Room {
       unassigned: null,
     }
 
-    for( let role in this.charList ){
-      for( let i = 0; i < this.charList[role]; i++ ){
+    for( let role in this.characterList ){
+      for( let i = 0; i < this.characterList[role]; i++ ){
         roles.push(role);
       }
     }
@@ -99,7 +99,7 @@ class Room {
   }
 
   roleCount(){
-    return Object.values(this.charList).reduce((acc, count) => acc + count)
+    return Object.values(this.characterList).reduce((acc, count) => acc + count)
   }
 
   validRoles(){

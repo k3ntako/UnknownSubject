@@ -1,0 +1,8 @@
+.cards{
+  display: grid;
+  /* grid-row-gap: 2rem; */
+  grid-column-gap: 2rem;
+  grid-template-columns: repeat( auto-fit, minmax(180px, 1fr) );
+  grid-template-rows: 275px; /* grid-row-gap isn't working, originally height is 248px */
+  justify-items: center;
+}

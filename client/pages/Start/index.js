@@ -36,7 +36,7 @@ class StartPage extends Component {
   onJoin = ( data ) =>{
     if( data.success ){
       this.props.addUsers(data.room.users);
-      this.props.updateCharCounts(data.room.charList);
+      this.props.updateCharCounts(data.room.characterList);
       this.props.history.push(`/room/${data.room.id}/setup`);
     }else{
       console.error("Failed to join session", data.message) //add error banner

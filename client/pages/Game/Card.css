@@ -1,8 +1,3 @@
-.cards{
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-}
-
 .cardBackBg{
   background: linear-gradient(-45deg, #1E3F66, #2E5984, #528AAE, #73A5C6);
   width: 180px;

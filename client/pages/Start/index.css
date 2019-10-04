@@ -14,7 +14,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(-45deg, #09FBD3, #08F7FE, #FF9DE6, #FE53BB, #F5D300);
+  background: linear-gradient(-45deg, #BCD2E8, #91BAD6, #73A5C6, #528AAE, #2E5984, #1E3F66);
   background-size: 400% 400%;
   animation: move-bg 10s ease-in-out infinite;
 }
