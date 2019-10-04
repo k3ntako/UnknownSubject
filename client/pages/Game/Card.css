@@ -1,0 +1,44 @@
+.cards{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.cardBackBg{
+  background: linear-gradient(-45deg, #1E3F66, #2E5984, #528AAE, #73A5C6);
+  width: 180px;
+  height: 240px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 10px 5px 10px rgba(0, 0, 0, 0.7);
+  transition: all 0.25s ease;
+  color: #eee;
+}
+
+.cardBackBg:hover{
+  padding: 0.25rem;
+}
+
+.cardBackBg.selected{
+  background: linear-gradient(-45deg, #09FBD3, #08F7FE, #FF9DE6, #FE53BB, #F5D300);
+  color: #1E3F66;
+}
+
+.cardBack{
+  background-color: rgba(255, 255, 255, 0.3); /* white filter to make black text easier to read */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.cardBack > span{
+  max-width: 100%;
+  font-size: 1.5rem;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  margin: 0.5rem;
+  user-select: none;
+}
