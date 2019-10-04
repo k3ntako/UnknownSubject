@@ -1,4 +1,9 @@
 const { Room } = require('../models/Room');
+const defaultUser = ( id, name ) => ({ // function removes reference
+  id: id,
+  name: name,
+  role: null,
+});
 
 module.exports = (io, socket, rooms) => {
   socket.on('create', function (data) {
@@ -6,15 +11,10 @@ module.exports = (io, socket, rooms) => {
       const { name } = data;
       if( !name || !name.trim() ) throw new Error("Invalid name");
 
-      //create user
-      const user = {
-        name: name,
-        id: socket.id,
-      };
-      socket.gameSession.userId = user.id;
+      socket.gameSession.userId = socket.id;
 
       //create room
-      const room = rooms.createRoom(user);
+      const room = rooms.createRoom( defaultUser(socket.id, name) );
       socket.gameSession.roomId = room.id;
 
       //add user to room
@@ -38,19 +38,16 @@ module.exports = (io, socket, rooms) => {
 
       //create user
       if( !name || !name.trim() ) throw new Error("Invalid name");
-      const user = {
-        name: name,
-        id: socket.id,
-      };
-      socket.gameSession.userId = user.id;
+      const newUser = defaultUser(socket.id, name);
+      socket.gameSession.userId = socket.id;
 
       //join room
-      const room = rooms.joinRoom(socket.gameSession.roomId, user);
+      const room = rooms.joinRoom(socket.gameSession.roomId, newUser);
       socket.join(socket.gameSession.roomId);
 
       //respond to front-end
       socket.emit('onJoin', { success: true, room: room });
-      socket.to(socket.gameSession.roomId).emit('userJoined', { user: user });
+      socket.to(socket.gameSession.roomId).emit('userJoined', { user: newUser });
     }catch( err ){
       console.error(err.message);
       socket.emit('onJoin', { success: false, message: err.message });

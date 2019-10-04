@@ -11,7 +11,10 @@ const initialize = ( socket ) => {
     GameReducer.Methods.updateOneCharCount(store.dispatch)(data.characterId, data.count);
   });
 
-  socket.on('beginningGame', () => onBeginningGameCb());
+  socket.on('beginningGame', (data) => {
+    RoomReducer.Methods.setRoles(store.dispatch)( data.roles );
+    onBeginningGameCb();
+  });
   socket.on('allPlayersLoaded', () => {
     RoomReducer.Methods.setAllPlayersLoaded(store.dispatch)( true );
   });

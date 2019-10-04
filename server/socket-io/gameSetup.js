@@ -16,12 +16,31 @@ module.exports = (io, socket, rooms) => {
   });
 
   // leader emits beginGame
-  // server emits beginningGame
+  // server emits beginningGame (along with roles)
   // players emit playerLoaded and wait for others to load
   // server emits allPlayersLoaded once everyone loaded
 
   socket.on('beginGame', function (data) {
-    socket.to(socket.gameSession.roomId).emit('beginningGame');
+    try {
+      const room = rooms.rooms[ socket.gameSession.roomId ];
+
+      // validate set up
+      if( !room.validRoles() ){
+        throw new Error("Not enough roles")
+      };
+
+      // TODO: verify unknown subject is one of them
+      // TODO: put maximums on certain characters
+
+      //asign roles
+      const roles = room.assignRoles();
+
+
+      io.in(socket.gameSession.roomId).emit('beginningGame', { roles: roles });
+    } catch (e) {
+      console.error(e);
+      io.in(socket.gameSession.roomId).emit('error', { message: e.message });
+    }
   });
 
   socket.on('playerLoaded', function (data) {

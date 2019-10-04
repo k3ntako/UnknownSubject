@@ -22,8 +22,10 @@ class GamePage extends Component {
   onCardClick = ( userId ) => {
     this.setState((prevState) => {
       if( prevState.selected.includes(userId) ){
+        // unselect
         return { selected: prevState.selected.filter(id => id !== userId) };
       }else{
+        // select
         return { selected: prevState.selected.concat(userId) };
       }
     });

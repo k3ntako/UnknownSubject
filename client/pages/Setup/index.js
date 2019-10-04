@@ -37,7 +37,6 @@ class SetupPage extends Component {
 
   begin = () => {
     socket.emit('beginGame');
-    this.onBeginningGame();
   }
 
   onBeginningGame = () => {

@@ -1,11 +1,13 @@
 const Types = {
   ADD_USERS: 'ADD_USERS',
   REMOVE_USER: 'REMOVE_USER',
+  SET_ROLES: 'SET_ROLES',
   SET_ALL_PLAYERS_LOADED: 'SET_ALL_PLAYERS_LOADED',
 };
 
 const initialState = {
   users: [],
+  unassignedRoles: [],
   allPlayersLoaded: false,
 };
 
@@ -19,6 +21,16 @@ const RoomReducer = (state = initialState, action) => {
     case Types.REMOVE_USER:
       return Object.assign({}, state, {
         users: state.users.filter(user => user.id !== action.userId),
+      });
+    case Types.SET_ROLES:
+      const newUsers = state.users.concat().map(user => { //concat remove reference
+        user.role = action.roles.assigned[ user.id ];
+        return user;
+      });
+
+      return Object.assign({}, state, {
+        users: newUsers,
+        unassignedRoles: action.roles.unassigned
       });
     case Types.SET_ALL_PLAYERS_LOADED:
       return Object.assign({}, state, {
@@ -45,6 +57,14 @@ RoomReducer.Methods = {
       dispatch({
         type: RoomReducer.Types.REMOVE_USER,
         userId: userId,
+      });
+    }
+  },
+  setRoles: (dispatch) => {
+    return ( roles ) => {
+      dispatch({
+        type: RoomReducer.Types.SET_ROLES,
+        roles: roles,
       });
     }
   },

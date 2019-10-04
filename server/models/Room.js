@@ -1,3 +1,5 @@
+const generateUUID_V4 = (a) => a?(a^Math.random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,generateUUID_V4);
+
 class Room {
   constructor(id, creator){
     this.id = id;
@@ -67,6 +69,43 @@ class Room {
     // return user;
   }
 
+  assignRoles(){
+    const roles = [];
+    const resultingRoles = {
+      assigned: {},
+      unassigned: null,
+    }
+
+    for( let role in this.charList ){
+      for( let i = 0; i < this.charList[role]; i++ ){
+        roles.push(role);
+      }
+    }
+
+    this.users.forEach(user => {
+      const rand = Math.floor( Math.random() * roles.length );
+      const role = roles.splice(rand, 1)[0];
+      user.role = role;
+      resultingRoles.assigned[ user.id ] = role;
+    });
+
+
+
+    resultingRoles.unassigned = roles.map(role => ({
+      id: generateUUID_V4(),
+      role: role,
+    }));
+    return resultingRoles;
+  }
+
+  roleCount(){
+    return Object.values(this.charList).reduce((acc, count) => acc + count)
+  }
+
+  validRoles(){
+    return this.roleCount() === this.users.length + 3; //add more validations
+  }
+
   playerLoaded(id){
     if( !this.loadedUsers.includes(id)){
       this.loadedUsers.push(id);
@@ -74,8 +113,6 @@ class Room {
 
     return this.loadedUsers.length === this.users.length;
   }
-
-
 }
 
 
