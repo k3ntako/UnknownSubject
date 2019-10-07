@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import GameReducer from '../../redux/reducers/GameReducer';
 
-import Card from './Card';
+import Cards from './Cards';
 import socket from '../../socket-io';
 import styles from './index.css';
 
@@ -22,36 +22,25 @@ class GamePage extends Component {
   onCardClick = ( userId ) => {
     this.setState((prevState) => {
       if( prevState.selected.includes(userId) ){
-        // unselect
-        return { selected: prevState.selected.filter(id => id !== userId) };
+        return { selected: prevState.selected.filter(id => id !== userId) }; // unselect
       }else{
-        // select
-        return { selected: prevState.selected.concat(userId) };
+        return { selected: prevState.selected.concat(userId) }; // select
       }
     });
   }
 
   render(){
     const { selected } = this.state;
+    const { users, unassignedRoles } = this.props;
 
     return <div className={"section"}>
       <h1 className={styles.title}>Game</h1>
-      <div className={styles.cards}>
-        { this.props.users.map(user => <Card
-          key={user.id}
-          id={user.id}
-          text={user.name}
-          selected={selected}
-          onCardClick={this.onCardClick} /> )}
-      </div>
-      <div className={styles.cards}>
-        { this.props.unassignedRoles.map(role => <Card
-          key={role.id}
-          id={role.id}
-          text={role.role}
-          selected={selected}
-          onCardClick={this.onCardClick} /> )}
-      </div>
+      <Cards
+        selected={selected}
+        users={users}
+        unassignedRoles={unassignedRoles}
+        onCardClick={this.onCardClick}/>
+      <OverlayMessage />
     </div>
   }
 }

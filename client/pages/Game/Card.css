@@ -1,3 +1,12 @@
+.cards{
+  display: grid;
+  /* grid-row-gap: 2rem; */
+  grid-column-gap: 2rem;
+  grid-template-columns: repeat( auto-fit, minmax(180px, 1fr) );
+  grid-template-rows: 275px; /* grid-row-gap isn't working, originally height is 248px */
+  justify-items: center;
+}
+
 .cardBackBg{
   background: linear-gradient(-45deg, #1E3F66, #2E5984, #528AAE, #73A5C6);
   width: 180px;
