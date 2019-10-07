@@ -15,10 +15,6 @@ const initialize = ( socket ) => {
     RoomReducer.Methods.setRoles(store.dispatch)( data.roles );
     onBeginningGameCb();
   });
-  socket.on('allPlayersLoaded', () => {
-    RoomReducer.Methods.setAllPlayersLoaded(store.dispatch)( true );
-  });
-
 }
 
 export default initialize;
@@ -26,8 +22,3 @@ export {
   setOnBeginningGameCb,
   removeOnBeginningGameCb,
 }
-
-// leader emits beginGame
-// server emits beginningGame
-// players emit playerLoaded and wait for others to load
-// server emits allPlayersLoaded once everyone loaded

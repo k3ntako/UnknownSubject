@@ -13,5 +13,8 @@ import initializeGameSetup from './gameSetup';
 initializeGameSetup( socket );
 export { setOnBeginningGameCb, removeOnBeginningGameCb } from './gameSetup';
 
+import initializeGamePlay from './gamePlay';
+initializeGamePlay( socket );
+
 
 export default socket;

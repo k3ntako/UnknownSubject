@@ -8,5 +8,6 @@ module.exports = (io, rooms) => {
     require('./userInitialization')(io, socket, rooms);
     require('./userDisconnection')(io, socket, rooms);
     require('./gameSetup')(io, socket, rooms);
+    require('./gamePlay')(io, socket, rooms);
   });
 }
