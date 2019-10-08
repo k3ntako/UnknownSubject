@@ -1,16 +1,13 @@
+import { CHARACTER_IDS } from '../../models/CharacterList';
+const initialCharacterList = {};
+CHARACTER_IDS.forEach( id => initialCharacterList[id] = 0 );
+
 const Types = {
   UPDATE_CHAR_COUNTS: 'UPDATE_CHAR_COUNTS',
 };
 
 const initialState = {
-  characterList: {
-    citizen: 0,
-    jury_member: 0,
-    witness: 0,
-    bail_bondsman: 0,
-    robber: 0,
-    bob: 0,
-  },
+  characterList: initialCharacterList,
 };
 
 //Reducer

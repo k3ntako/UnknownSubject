@@ -9,11 +9,14 @@ class Room {
     this.loadedUsers = [];
     this.characterList = {
       citizen: 0,
-      jury_member: 0,
+      grandparent: 0,
+      identity_thief: 0,
+      lookout: 0,
+      murderer: 0,
+      night_owl: 0,
+      scientist: 0,
+      twin: 0,
       witness: 0,
-      bail_bondsman: 0,
-      robber: 0,
-      bob: 0,
     };
   }
 
