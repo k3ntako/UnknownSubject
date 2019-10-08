@@ -35,6 +35,7 @@ class StartPage extends Component {
 
   onJoin = ( data ) =>{
     if( data.success ){
+      this.props.setMyId(socket.id);
       this.props.addUsers(data.room.users);
       this.props.updateCharCounts(data.room.characterList);
       this.props.history.push(`/room/${data.room.id}/setup`);
@@ -160,6 +161,7 @@ class StartPage extends Component {
 const mapDispatchToProps = function(dispatch){
   return {
     addUsers: RoomReducer.Methods.addUsers(dispatch),
+    setMyId: RoomReducer.Methods.setMyId(dispatch),
     updateCharCounts: GameReducer.Methods.updateCharCounts(dispatch),
   };
 }

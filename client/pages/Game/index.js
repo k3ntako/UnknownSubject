@@ -12,11 +12,49 @@ class GamePage extends Component {
     super(props);
     this.state = {
       selected: [],
+      myRole: null,
+      message: null,
     };
   }
 
   componentDidMount(){
     socket.emit('playerLoaded');
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if( !prevProps.allPlayersLoaded && this.props.allPlayersLoaded ){
+      const { myRole, roles, myId } = this.props;
+
+      // if user is witness
+      if( myRole === "witness" ){
+        const message = "Go look at two unassigned cards, or one card of another player.";
+        return this.setState({ message });
+      }
+
+      // if user is murderer, twin, or lookout
+      let roleText = "other " + myRole;
+      let users = [];
+
+      if( myRole === "murderer" || myRole === "twin" ){
+        users = roles[myRole].filter(user => user.id !== myId); //same role as user
+      }else if( myRole === "lookout" ){
+        roleText = "murderer"
+        users = roles.murders;
+      }
+
+      if( !users.length ){
+        const message = `There is no ${roleText}.`;
+        return this.setState({ message });
+      }
+
+      const names = users.map(user => user.name).join(", ");
+
+      const isPlural = users.length !== 1;
+      roleText += isPlural ? "s are" : " is";
+
+      const message = `The ${roleText} ${names}`;
+      this.setState({ message });
+    }
   }
 
   onCardClick = ( userId ) => {
@@ -30,7 +68,7 @@ class GamePage extends Component {
   }
 
   render(){
-    const { selected } = this.state;
+    const { selected, message } = this.state;
     const { users, unassignedRoles } = this.props;
 
     return <div className={"section"}>
@@ -40,7 +78,6 @@ class GamePage extends Component {
         users={users}
         unassignedRoles={unassignedRoles}
         onCardClick={this.onCardClick}/>
-      <OverlayMessage />
     </div>
   }
 }
@@ -49,6 +86,9 @@ class GamePage extends Component {
 const mapStateToProps = function(state){
   return {
     allPlayersLoaded: state.room.allPlayersLoaded,
+    myId: state.room.myId,
+    myRole: state.room.myRole,
+    roles: state.room.roles,
     characterList: state.game.characterList,
     users: state.room.users,
     unassignedRoles: state.room.unassignedRoles,
