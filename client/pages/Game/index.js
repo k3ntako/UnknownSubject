@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Cards from './Cards';
+import Loading from './Loading';
 import socket from '../../socket-io';
 import styles from './index.css';
 import { CHARACTER_LIST } from '../../models/CharacterList';
@@ -113,17 +114,13 @@ class GamePage extends Component {
   }
 
   render(){
-    const { myCharacter, assignedSelected, unassignedSelected, selectAssignedMax, selectUnassignedMax } = this.state;
-    const { users, unassignedRoles, myRole } = this.props;        
+    const { myCharacter, assignedSelected, unassignedSelected, selectAssignedMax, selectUnassignedMax, timerFinished } = this.state;
+    const { users, unassignedRoles, myRole } = this.props;       
 
-    if (!myRole || !myCharacter ){
-      return <div>
-        Loading...
-      </div>
+    if (!myRole || !myCharacter || timerFinished){
+      return <Loading />;
     }
     
-    
-
     return <div className={"section"}>
       <div className={styles.header}>
         <div>
