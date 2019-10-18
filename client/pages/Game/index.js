@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import GameReducer from '../../redux/reducers/GameReducer';
 
 import Cards from './Cards';
 import socket from '../../socket-io';
 import styles from './index.css';
 import { CHARACTER_LIST } from '../../models/CharacterList';
-import { runInThisContext } from 'vm';
 
 class GamePage extends Component {
   constructor(props){
@@ -19,7 +17,10 @@ class GamePage extends Component {
       selectUnassignedMax: 0,
       assignedSelected: [],
       unassignedSelected: [],
+      timerFinished: false,
     };
+    this.timeLeft = 10;
+    this.timer = null;
   }
 
   componentDidMount(){
@@ -45,7 +46,7 @@ class GamePage extends Component {
       // if user is witness
       if( myRole === "witness" ){
         const message = "Go look at two unassigned cards, or one card of another player.";
-        return this.setState({ message });
+        return this.setState({ message }, this.startTimer);
       }
 
       // if user is murderer, twin, or lawyer
@@ -61,7 +62,7 @@ class GamePage extends Component {
 
       if( !users.length ){
         const message = `There is no ${roleText}.`;
-        return this.setState({ message });
+        return this.setState({ message }, this.startTimer);
       }
 
       const names = users.map(user => user.name).join(", ");
@@ -70,8 +71,20 @@ class GamePage extends Component {
       roleText += isPlural ? "s are" : " is";
 
       const message = `The ${roleText} ${names}`;
-      this.setState({ message });
+      this.setState({ message }, this.startTimer);
     }
+  }
+
+  startTimer(){
+    this.timeLeft = 10;
+    this.timer = setInterval(() => {
+      this.timeLeft--;
+      this.forceUpdate();        
+      if (this.timeLeft < 0) {
+        clearInterval(this.timer);
+        this.setState({ timerFinished: true });
+      }
+    }, 1000);
   }
 
   onCardClick = (cardType, id) => { //id can be card id (unassigned cards) or userId (assigned cards)
@@ -112,8 +125,15 @@ class GamePage extends Component {
     
 
     return <div className={"section"}>
-      <h1 className={styles.title}>Unknown Subject</h1>
-      <h3 className={styles.title}>Your Role: {myCharacter.name}</h3>
+      <div className={styles.header}>
+        <div>
+          <h1 className={styles.title}>Unknown Subject</h1>
+          <h3 className={styles.title}>Your Role: {myCharacter.name}</h3>
+        </div>
+        <h1>
+          {this.timer && (this.timeLeft + 1)}
+        </h1>
+      </div>
       <Cards
         assignedSelected={assignedSelected}
         unassignedSelected={unassignedSelected}
