@@ -1,46 +1,54 @@
-const CHARACTER_LIST = [
-  {
+// Action Types:
+// null - citizen
+// view - murderer, lawyer, twin
+// select_view - witness
+// switch_self - identity thief, grandparent
+// switch_assigned - scientist
+// view_self - night owl
+
+const CHARACTER_LIST = {
+  citizen: {
     id: "citizen",
-    roleName: "Citizen",
+    name: "Citizen",
     description: "As an average citizen you have no role, but make sure you are not wrongly convicted of the crime.",
     action: null,
-  }, {
+  }, 
+  murderer: {
     id: "murderer",
-    roleName: "Murderer",
+    name: "Murderer",
     description: "You committed the crime. Make sure you don't get caught.",
     action: {
-      actionStage: 0,
-      action: 'view',
+      type: 'view',
       viewType: 'murderer',
       select: false,
     },
-  }, {
+  }, 
+  lawyer: {
     id: "lawyer",
-    roleName: "Defense Lawyer",
+    name: "Defense Lawyer",
     description: "You were watching from afar to make alert the robbers of any police officers. They have no solid evidence you were involved. You'll definitely win your appeal.",
     action: {
-      actionStage: 0,
-      action: 'view',
+      type: 'view',
       viewType: 'murderer',
       select: false,
     },
-  }, {
+  }, 
+  twin: {
     id: "twin",
-    roleName: "Twin",
+    name: "Twin",
     description: "You have an alibi: you were with your twin.",
     action: {
-      actionStage: 0,
-      action: 'view',
+      type: 'view',
       viewType: 'twin',
       select: false,
     },
-  }, {
+  }, 
+  witness: {
     id: "witness",
-    roleName: "Witness",
+    name: "Witness",
     description: "As a witness, they may have some information about what they saw.",
     action: {
-      actionStage: 0,
-      action: 'view',
+      type: 'select_view',
       select: {
         selectUnassigned: 2,
         selectAssigned: 1,
@@ -49,12 +57,13 @@ const CHARACTER_LIST = [
         viewSelected: true,
       },
     },
-  }, {
+  }, 
+  identity_thief: {
     id: "identity_thief",
-    roleName: "Identity Thief",
+    name: "Identity Thief",
     description: "You like to steal other people's roles.",
     action: {
-      action: 'switch_with_self',
+      type: 'switch_self',
       select: {
         selectUnassigned: 0,
         selectAssigned: 1,
@@ -63,13 +72,13 @@ const CHARACTER_LIST = [
         viewSelected: false,
       },
     },
-  }, {
+  }, 
+  scientist: {
     id: "scientist",
-    roleName: "Scientist",
+    name: "Scientist",
     description: "You created a machine that switches the body of two people.",
     action: {
-      actionStage: 0,
-      action: 'switch_other_assigned',
+      type: 'switch_assigned',
       select: {
         selectUnassigned: 2,
         selectAssigned: 0,
@@ -78,12 +87,13 @@ const CHARACTER_LIST = [
         viewSelected: false,
       },
     },
-  }, {
+  }, 
+  grandparent: {
     id: "grandparent",
-    roleName: "Grandparent",
+    name: "Grandparent",
     description: "You always forget who you are.",
     action: {
-      action: 'switch_with_self',
+      type: 'switch_self',
       select: {
         selectUnassigned: 1,
         selectAssigned: 0,
@@ -92,18 +102,19 @@ const CHARACTER_LIST = [
         viewSelected: false,
       },
     },
-  }, {
+  }, 
+  night_owl: {
     id: "night_owl",
-    roleName: "Night Owl",
+    name: "Night Owl",
     description: "You were up late, and you had the chance to check if your role has changed.",
     action: {
-      action: 'view_self',
+      type: 'view_self',
       select: false,
     },
   }
-];
+};
 
-const CHARACTER_IDS = CHARACTER_LIST.map(char => char.id);
+const CHARACTER_IDS = Object.keys(CHARACTER_LIST);
 
 module.exports = {
   CHARACTER_IDS,

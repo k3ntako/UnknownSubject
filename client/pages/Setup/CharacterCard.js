@@ -27,7 +27,7 @@ export default class CharacterCard extends Component {
         { this.props.count }
       </div>
       <div className={styles.name}>
-        { character.roleName }
+        { character.name }
       </div>
       <div>
         <div className={styles.plusButton} onClick={this.onPlus}>

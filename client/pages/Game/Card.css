@@ -18,11 +18,11 @@
   color: #eee;
 }
 
-.cardBackBg:hover{
+.cardBackBg.isSelecting:hover{
   padding: 0.25rem;
 }
 
-.cardBackBg.selected{
+.cardBackBg.isSelecting.selected{
   background: linear-gradient(-45deg, #09FBD3, #08F7FE, #FF9DE6, #FE53BB, #F5D300);
   color: #1E3F66;
 }

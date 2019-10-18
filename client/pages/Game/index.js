@@ -6,14 +6,19 @@ import GameReducer from '../../redux/reducers/GameReducer';
 import Cards from './Cards';
 import socket from '../../socket-io';
 import styles from './index.css';
+import { CHARACTER_LIST } from '../../models/CharacterList';
+import { runInThisContext } from 'vm';
 
 class GamePage extends Component {
   constructor(props){
     super(props);
     this.state = {
-      selected: [],
-      myRole: null,
+      myCharacter: null,
       message: null,
+      selectAssignedMax: 0,
+      selectUnassignedMax: 0,
+      assignedSelected: [],
+      unassignedSelected: [],
     };
   }
 
@@ -22,8 +27,20 @@ class GamePage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState){
+    const { myRole } = this.props;
+
+    if (!this.state.myCharacter && myRole ){
+      const myCharacter = CHARACTER_LIST[myRole];
+
+      this.setState({ 
+        myCharacter,
+        selectAssignedMax: (myCharacter.action && myCharacter.action.select && myCharacter.action.select.selectAssigned) || 0,
+        selectUnassignedMax: (myCharacter.action && myCharacter.action.select && myCharacter.action.select.selectUnassigned) || 0,
+      });
+    }
+
     if( !prevProps.allPlayersLoaded && this.props.allPlayersLoaded ){
-      const { myRole, roles, myId } = this.props;
+      const { roles, myId } = this.props;
 
       // if user is witness
       if( myRole === "witness" ){
@@ -57,24 +74,51 @@ class GamePage extends Component {
     }
   }
 
-  onCardClick = ( userId ) => {
+  onCardClick = (cardType, id) => { //id can be card id (unassigned cards) or userId (assigned cards)
+    const { selectAssignedMax, selectUnassignedMax } = this.state;
+    const selectMaxNum = cardType === "assigned" ? selectAssignedMax : selectUnassignedMax;
+    if (!selectMaxNum){
+      return;
+    }
+
+    const key = cardType + "Selected";
+    const otherKey = cardType === "assigned" ? "unassignedSelected" : "assignedSelected";
     this.setState((prevState) => {
-      if( prevState.selected.includes(userId) ){
-        return { selected: prevState.selected.filter(id => id !== userId) }; // unselect
-      }else{
-        return { selected: prevState.selected.concat(userId) }; // select
+      // unselect card
+      if ( prevState[key].includes(id) ){
+        return { [key]: prevState[key].filter(selectedId => selectedId !== id) };
+      }
+
+      // select card
+      if (this.state[key].length < selectMaxNum){
+        return { 
+          [key]: prevState[key].concat(id),
+          [otherKey]: [],
+        };
       }
     });
   }
 
   render(){
-    const { selected, message } = this.state;
-    const { users, unassignedRoles } = this.props;
+    const { myCharacter, assignedSelected, unassignedSelected, selectAssignedMax, selectUnassignedMax } = this.state;
+    const { users, unassignedRoles, myRole } = this.props;        
+
+    if (!myRole || !myCharacter ){
+      return <div>
+        Loading...
+      </div>
+    }
+    
+    
 
     return <div className={"section"}>
-      <h1 className={styles.title}>Game</h1>
+      <h1 className={styles.title}>Unknown Subject</h1>
+      <h3 className={styles.title}>Your Role: {myCharacter.name}</h3>
       <Cards
-        selected={selected}
+        assignedSelected={assignedSelected}
+        unassignedSelected={unassignedSelected}
+        selectAssignedMax={selectAssignedMax}
+        selectUnassignedMax={selectUnassignedMax}
         users={users}
         unassignedRoles={unassignedRoles}
         onCardClick={this.onCardClick}/>
