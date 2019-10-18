@@ -5,13 +5,33 @@ const CHARACTER_LIST = [
     description: "As an average citizen you have no role, but make sure you are not wrongly convicted of the crime.",
     action: null,
   }, {
-    id: "lookout",
-    roleName: "Lookout",
+    id: "murderer",
+    roleName: "Murderer",
+    description: "You committed the crime. Make sure you don't get caught.",
+    action: {
+      actionStage: 0,
+      action: 'view',
+      viewType: 'murderer',
+      select: false,
+    },
+  }, {
+    id: "lawyer",
+    roleName: "Defense Lawyer",
     description: "You were watching from afar to make alert the robbers of any police officers. They have no solid evidence you were involved. You'll definitely win your appeal.",
     action: {
       actionStage: 0,
       action: 'view',
       viewType: 'murderer',
+      select: false,
+    },
+  }, {
+    id: "twin",
+    roleName: "Twin",
+    description: "You have an alibi: you were with your twin.",
+    action: {
+      actionStage: 0,
+      action: 'view',
+      viewType: 'twin',
       select: false,
     },
   }, {
@@ -30,24 +50,18 @@ const CHARACTER_LIST = [
       },
     },
   }, {
-    id: "twin",
-    roleName: "Twin",
-    description: "You have an alibi: you were with your twin.",
+    id: "identity_thief",
+    roleName: "Identity Thief",
+    description: "You like to steal other people's roles.",
     action: {
-      actionStage: 0,
-      action: 'view',
-      viewType: 'twin',
-      select: false,
-    },
-  }, {
-    id: "murderer",
-    roleName: "Murderer",
-    description: "You committed the crime. Make sure you don't get caught.",
-    action: {
-      actionStage: 0,
-      action: 'view',
-      viewType: 'murderer',
-      select: false,
+      action: 'switch_with_self',
+      select: {
+        selectUnassigned: 0,
+        selectAssigned: 1,
+        selectFromBoth: false,
+        selectSelf: false,
+        viewSelected: false,
+      },
     },
   }, {
     id: "scientist",
@@ -73,20 +87,6 @@ const CHARACTER_LIST = [
       select: {
         selectUnassigned: 1,
         selectAssigned: 0,
-        selectFromBoth: false,
-        selectSelf: false,
-        viewSelected: false,
-      },
-    },
-  }, {
-    id: "identity_thief",
-    roleName: "Identity Thief",
-    description: "You like to steal other people's roles.",
-    action: {
-      action: 'switch_with_self',
-      select: {
-        selectUnassigned: 0,
-        selectAssigned: 1,
         selectFromBoth: false,
         selectSelf: false,
         viewSelected: false,

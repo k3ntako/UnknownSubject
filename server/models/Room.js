@@ -11,7 +11,7 @@ class Room {
       citizen: 0,
       grandparent: 0,
       identity_thief: 0,
-      lookout: 0,
+      lawyer: 0,
       murderer: 0,
       night_owl: 0,
       scientist: 0,

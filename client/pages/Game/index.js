@@ -31,13 +31,13 @@ class GamePage extends Component {
         return this.setState({ message });
       }
 
-      // if user is murderer, twin, or lookout
+      // if user is murderer, twin, or lawyer
       let roleText = "other " + myRole;
       let users = [];
 
       if( myRole === "murderer" || myRole === "twin" ){
         users = roles[myRole].filter(user => user.id !== myId); //same role as user
-      }else if( myRole === "lookout" ){
+      }else if( myRole === "lawyer" ){
         roleText = "murderer"
         users = roles.murders;
       }
