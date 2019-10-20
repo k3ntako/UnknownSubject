@@ -46,3 +46,9 @@
   margin: 0.5rem;
   user-select: none;
 }
+
+.cardsTitle{
+  text-align: center;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #ccc;
+}

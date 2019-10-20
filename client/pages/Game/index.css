@@ -7,6 +7,15 @@ h1.title{
   margin-bottom: 0;
 }
 
-h3.title{
-  margin-top: 0;
+.role{
+  font-size: 1.5rem;
+}
+
+.instruction{
+  font-size: 2rem;
+  font-weight: 300;
+}
+
+span.bold{
+  font-weight: 400;
 }

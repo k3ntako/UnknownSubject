@@ -7,6 +7,7 @@ import Loading from './Loading';
 import socket from '../../socket-io';
 import styles from './index.css';
 import { CHARACTER_LIST } from '../../models/CharacterList';
+import NonOrderAffecting from './NonOrderAffecting';
 
 class GamePage extends Component {
   constructor(props){
@@ -20,7 +21,7 @@ class GamePage extends Component {
       unassignedSelected: [],
       timerFinished: false,
     };
-    this.timeLeft = 10;
+    this.timeLeft = 0;
     this.timer = null;
   }
 
@@ -43,41 +44,13 @@ class GamePage extends Component {
 
     if( !prevProps.allPlayersLoaded && this.props.allPlayersLoaded ){
       const { roles, myId } = this.props;
-
-      // if user is witness
-      if( myRole === "witness" ){
-        const message = "Go look at two unassigned cards, or one card of another player.";
-        return this.setState({ message }, this.startTimer);
-      }
-
-      // if user is murderer, twin, or lawyer
-      let roleText = "other " + myRole;
-      let users = [];
-
-      if( myRole === "murderer" || myRole === "twin" ){
-        users = roles[myRole].filter(user => user.id !== myId); //same role as user
-      }else if( myRole === "lawyer" ){
-        roleText = "murderer"
-        users = roles.murders;
-      }
-
-      if( !users.length ){
-        const message = `There is no ${roleText}.`;
-        return this.setState({ message }, this.startTimer);
-      }
-
-      const names = users.map(user => user.name).join(", ");
-
-      const isPlural = users.length !== 1;
-      roleText += isPlural ? "s are" : " is";
-
-      const message = `The ${roleText} ${names}`;
+      const message = NonOrderAffecting(myRole, roles, myId)
       this.setState({ message }, this.startTimer);
     }
   }
 
   startTimer(){
-    this.timeLeft = 10;
+    this.timeLeft = 15;
     this.timer = setInterval(() => {
       this.timeLeft--;
       this.forceUpdate();        
@@ -113,24 +86,29 @@ class GamePage extends Component {
     });
   }
 
+  onDone = () => {    
+    socket.emit('done');
+  }
+
   render(){
-    const { myCharacter, assignedSelected, unassignedSelected, selectAssignedMax, selectUnassignedMax, timerFinished } = this.state;
+    const { myCharacter, assignedSelected, unassignedSelected, selectAssignedMax, selectUnassignedMax, timerFinished, message } = this.state;
     const { users, unassignedRoles, myRole } = this.props;       
 
-    if (!myRole || !myCharacter || timerFinished){
+    if (!myRole || !myCharacter /*|| timerFinished*/ ){
       return <Loading />;
     }
-    
+
     return <div className={"section"}>
       <div className={styles.header}>
         <div>
           <h1 className={styles.title}>Unknown Subject</h1>
-          <h3 className={styles.title}>Your Role: {myCharacter.name}</h3>
+          <div className={styles.role}>Your Role: {myCharacter.name}</div>
         </div>
         <h1>
           {this.timer && (this.timeLeft + 1)}
         </h1>
       </div>
+      <div className={styles.instruction}> { message } </div>
       <Cards
         assignedSelected={assignedSelected}
         unassignedSelected={unassignedSelected}
@@ -138,7 +116,8 @@ class GamePage extends Component {
         selectUnassignedMax={selectUnassignedMax}
         users={users}
         unassignedRoles={unassignedRoles}
-        onCardClick={this.onCardClick}/>
+        onCardClick={this.onCardClick}
+        onDone={this.onDone}/>
     </div>
   }
 }

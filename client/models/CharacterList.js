@@ -75,7 +75,7 @@ const CHARACTER_LIST = {
   }, 
   scientist: {
     id: "scientist",
-    name: "Scientist",
+    name: "Mad Scientist",
     description: "You created a machine that switches the body of two people.",
     action: {
       type: 'switch_assigned',
