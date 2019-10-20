@@ -47,6 +47,10 @@ a:hover{
   color: #154360;
 }
 
+button{
+  cursor: pointer;
+}
+
 input{
   font-family: 'Josefin Sans', sans-serif;
 }
