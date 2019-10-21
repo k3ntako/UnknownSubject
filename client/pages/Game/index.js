@@ -7,7 +7,7 @@ import Loading from './Loading';
 import socket from '../../socket-io';
 import styles from './index.css';
 import { CHARACTER_LIST } from '../../models/CharacterList';
-import NonOrderAffecting from './NonOrderAffecting';
+import NonOrderAffecting from '../../utilities/NonOrderAffecting';
 
 class GamePage extends Component {
   constructor(props){
