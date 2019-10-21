@@ -39,21 +39,22 @@ const RoomReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         myId: action.myId,
       });
-    case Types.SET_MY_ROLE:
-      const me = state.users.find(user => user.id === state.myId);
-      return Object.assign({}, state, {
-        myRole: me.role,
-      });
     case Types.SET_ROLES:
       const newRoles = initialRoles(); //remove reference
+      let me = null;
       const newUsers = state.users.concat().map(user => { //concat remove reference
-        const roleId = action.roles.assigned[ user.id ];
-        user.role = roleId;
-        newRoles[roleId].push( user )
-        return user;
+        const newUser = Object.assign({}, user);
+        const roleId = action.roles.assigned[ newUser.id ];
+        newUser.role = roleId;
+        newRoles[roleId].push( newUser )
+
+        if(newUser.id === state.myId) me = newUser;
+
+        return newUser;
       });
 
       return Object.assign({}, state, {
+        myRole: me.role,
         users: newUsers,
         roles: newRoles,
         unassignedRoles: action.roles.unassigned
@@ -91,13 +92,6 @@ RoomReducer.Methods = {
       dispatch({
         type: RoomReducer.Types.SET_MY_ID,
         myId: myId,
-      });
-    }
-  },
-  setMyRole: (dispatch) => {
-    return () => {
-      dispatch({
-        type: RoomReducer.Types.SET_MY_ROLE,
       });
     }
   },
