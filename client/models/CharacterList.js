@@ -1,10 +1,10 @@
 // Action Types:
 // null - citizen
 // view - murderer, lawyer, twin
-// select_view - witness
-// switch_self - identity thief, grandparent
-// switch_assigned - scientist
-// view_self - night owl
+// selectView - witness
+// switchSelf - identity thief, grandparent
+// switchAssigned - scientist
+// viewSelf - night owl
 
 const CHARACTER_LIST = {
   citizen: {
@@ -48,7 +48,7 @@ const CHARACTER_LIST = {
     name: "Witness",
     description: "As a witness, they may have some information about what they saw.",
     action: {
-      type: 'select_view',
+      type: 'selectView',
       select: {
         selectUnassigned: 2,
         selectAssigned: 1,
@@ -58,12 +58,12 @@ const CHARACTER_LIST = {
       },
     },
   }, 
-  identity_thief: {
-    id: "identity_thief",
+  identityThief: {
+    id: "identityThief",
     name: "Identity Thief",
     description: "You like to steal other people's roles.",
     action: {
-      type: 'switch_self',
+      type: 'switchSelf',
       select: {
         selectUnassigned: 0,
         selectAssigned: 1,
@@ -78,7 +78,7 @@ const CHARACTER_LIST = {
     name: "Mad Scientist",
     description: "You created a machine that switches the body of two people.",
     action: {
-      type: 'switch_assigned',
+      type: 'switchAssigned',
       select: {
         selectUnassigned: 2,
         selectAssigned: 0,
@@ -93,7 +93,7 @@ const CHARACTER_LIST = {
     name: "Grandparent",
     description: "You always forget who you are.",
     action: {
-      type: 'switch_self',
+      type: 'switchSelf',
       select: {
         selectUnassigned: 1,
         selectAssigned: 0,
@@ -103,12 +103,12 @@ const CHARACTER_LIST = {
       },
     },
   }, 
-  night_owl: {
-    id: "night_owl",
+  nightOwl: {
+    id: "nightOwl",
     name: "Night Owl",
     description: "You were up late, and you had the chance to check if your role has changed.",
     action: {
-      type: 'view_self',
+      type: 'viewSelf',
       select: false,
     },
   }

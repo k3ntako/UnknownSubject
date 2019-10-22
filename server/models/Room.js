@@ -7,13 +7,15 @@ class Room {
     this.users = [ creator ];
     this.userIds = [ creator.id ];
     this.loadedUsers = [];
+    this.currentStage = "0=gameSetup";
+    this.stages = ["0=gameSetup", "1=nonOrderAffecting"];
     this.characterList = {
       citizen: 0,
       grandparent: 0,
-      identity_thief: 0,
+      identityThief: 0,
       lawyer: 0,
       murderer: 0,
-      night_owl: 0,
+      nightOwl: 0,
       scientist: 0,
       twin: 0,
       witness: 0,
@@ -99,6 +101,25 @@ class Room {
       role: role,
     }));
     return resultingRoles;
+  }
+
+  setStages(){
+    ["thief", "scientist", "grandparent", "nightOwl"].forEach((id, idx) => {
+      // determines the stages that will be required based on which characters were selected
+      // idx + 2 because, stage 0 and 1 are "0=gameSetup", "1=nonOrderAffecting"
+      if(this.characterList[id] > 0){
+        this.stages.push(`${idx + 2}=${id}`);
+      }
+    });
+
+    return this.stages;
+  }
+
+  nextStage(){
+    const currentStageIndex = this.stages.indexOf(this.currentStage);
+    this.currentStage = this.stages[currentStageIndex + 1];
+
+    return this.currentStage;
   }
 
   roleCount(){

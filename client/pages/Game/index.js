@@ -68,7 +68,7 @@ class GamePage extends Component {
   }
 
   onDone = () => {    
-    socket.emit('done');
+    socket.emit('stageDone');
   }
 
   render(){
@@ -80,8 +80,6 @@ class GamePage extends Component {
     }
 
     let content = null;
-    console.log(myCharacter);
-    
     if( myCharacter.id === "witness" ){
       content = <Witness users={users} unassignedRoles={unassignedRoles} myCharacter={myCharacter} onDone={this.onDone} />
     }
@@ -102,9 +100,10 @@ const mapStateToProps = function(state){
     myId: state.room.myId,
     myRole: state.room.myRole,
     roles: state.room.roles,
-    characterList: state.game.characterList,
     users: state.room.users,
     unassignedRoles: state.room.unassignedRoles,
+    stages: state.room.stages,
+    currentStage: state.room.currentStage,
   }
 }
 

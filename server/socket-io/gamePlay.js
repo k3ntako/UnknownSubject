@@ -11,4 +11,11 @@ module.exports = (io, socket, rooms) => {
       io.in(socket.gameSession.roomId).emit('allPlayersLoaded');
     }
   });
+
+  socket.on('stageDone', function () {
+    const room = rooms.rooms[socket.gameSession.roomId];
+    const currentStage = room.nextStage();
+    
+    io.in(socket.gameSession.roomId).emit('nextStage', { currentStage });
+  });
 }

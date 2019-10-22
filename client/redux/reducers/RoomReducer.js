@@ -64,7 +64,8 @@ const RoomReducer = (state = initialState, action) => {
         myRole: me.role,
         users: newUsers,
         roles: newRoles,
-        unassignedRoles: action.roles.unassigned
+        unassignedRoles: action.roles.unassigned,
+        stages: action.stages,
       });
     case Types.SET_ALL_PLAYERS_LOADED:
       return Object.assign({}, state, {
@@ -75,7 +76,7 @@ const RoomReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         characterList: newCharList,
       });
-    case Types.SET_STAGE:
+    case Types.SET_CURRENT_STAGE:
       return Object.assign({}, state, {
         currentStage: action.stage,
       });
@@ -112,11 +113,12 @@ RoomReducer.Methods = {
     }
   },
   setRolesAndStages: (dispatch) => {
-    return ( roles, stages ) => {
+    return ( roles, stages, currentStage ) => { 
       dispatch({
         type: RoomReducer.Types.SET_ROLES_AND_STAGES,
         roles: roles,
         stages: stages,
+        currentStage: currentStage,
       });
     }
   },
@@ -146,11 +148,11 @@ RoomReducer.Methods = {
       })
     }
   },
-  setStage: (dispatch) => {
-    return (stage) => {
+  setCurrentStage: (dispatch) => {
+    return (currentStage) => {      
       return dispatch({
-        type: Types.SET_STAGE,
-        stage: stage,
+        type: Types.SET_CURRENT_STAGE,
+        currentStage: currentStage,
       })
     }
   },
