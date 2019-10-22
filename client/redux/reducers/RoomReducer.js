@@ -1,12 +1,16 @@
 import { CHARACTER_IDS } from '../../models/CharacterList';
+const initialCharacterList = {};
+CHARACTER_IDS.forEach(id => initialCharacterList[id] = 0);
 
 const Types = {
   ADD_USERS: 'ADD_USERS',
   REMOVE_USER: 'REMOVE_USER',
   SET_MY_ID: 'SET_MY_ID',
   SET_MY_ROLE: 'SET_MY_ROLE',
-  SET_ROLES: 'SET_ROLES',
+  SET_ROLES_AND_STAGES: 'SET_ROLES_AND_STAGES',
   SET_ALL_PLAYERS_LOADED: 'SET_ALL_PLAYERS_LOADED',
+  UPDATE_CHAR_COUNTS: 'UPDATE_CHAR_COUNTS',
+  SET_CURRENT_STAGE: 'SET_CURRENT_STAGE',
 };
 
 const initialRoles = () => {
@@ -17,6 +21,9 @@ const initialRoles = () => {
 
 const initialState = {
   myId: null,
+  currentStage: "0=gameSetup",
+  stages: [],
+  characterList: initialCharacterList,
   myRole: null,
   roles: initialRoles(),
   users: [],
@@ -39,7 +46,7 @@ const RoomReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         myId: action.myId,
       });
-    case Types.SET_ROLES:
+    case Types.SET_ROLES_AND_STAGES:
       const newRoles = initialRoles(); //remove reference
       let me = null;
       const newUsers = state.users.concat().map(user => { //concat remove reference
@@ -62,6 +69,15 @@ const RoomReducer = (state = initialState, action) => {
     case Types.SET_ALL_PLAYERS_LOADED:
       return Object.assign({}, state, {
         allPlayersLoaded: action.allPlayersLoaded,
+      });
+    case Types.UPDATE_CHAR_COUNTS:
+      const newCharList = Object.assign({}, state.characterList, action.characterList);
+      return Object.assign({}, state, {
+        characterList: newCharList,
+      });
+    case Types.SET_STAGE:
+      return Object.assign({}, state, {
+        currentStage: action.stage,
       });
     default:
       return state;
@@ -95,11 +111,12 @@ RoomReducer.Methods = {
       });
     }
   },
-  setRoles: (dispatch) => {
-    return ( roles ) => {
+  setRolesAndStages: (dispatch) => {
+    return ( roles, stages ) => {
       dispatch({
-        type: RoomReducer.Types.SET_ROLES,
+        type: RoomReducer.Types.SET_ROLES_AND_STAGES,
         roles: roles,
+        stages: stages,
       });
     }
   },
@@ -109,6 +126,32 @@ RoomReducer.Methods = {
         type: RoomReducer.Types.SET_ALL_PLAYERS_LOADED,
         allPlayersLoaded: allPlayersLoaded,
       });
+    }
+  },
+  updateOneCharCount: (dispatch) => {
+    return (characterId, count) => {
+      return dispatch({
+        type: Types.UPDATE_CHAR_COUNTS,
+        characterList: {
+          [characterId]: count,
+        },
+      })
+    }
+  },
+  updateCharCounts: (dispatch) => {
+    return (characterList) => {
+      return dispatch({
+        type: Types.UPDATE_CHAR_COUNTS,
+        characterList: characterList,
+      })
+    }
+  },
+  setStage: (dispatch) => {
+    return (stage) => {
+      return dispatch({
+        type: Types.SET_STAGE,
+        stage: stage,
+      })
     }
   },
 }

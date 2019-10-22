@@ -1,4 +1,3 @@
-import GameReducer from '../redux/reducers/GameReducer';
 import RoomReducer from '../redux/reducers/RoomReducer';
 import store from '../redux/store';
 
@@ -8,11 +7,11 @@ const removeOnBeginningGameCb = () => onBeginningGameCb = (d) => { console.error
 
 const initialize = ( socket ) => {
   socket.on('onChangeCount', (data) => {
-    GameReducer.Methods.updateOneCharCount(store.dispatch)(data.characterId, data.count);
+    RoomReducer.Methods.updateOneCharCount(store.dispatch)(data.characterId, data.count);
   });
 
   socket.on('beginningGame', (data) => {
-    RoomReducer.Methods.setRoles(store.dispatch)( data.roles );
+    RoomReducer.Methods.setRolesAndStages(store.dispatch)( data.roles, data.stages );
     onBeginningGameCb();
   });
 }

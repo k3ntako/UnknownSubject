@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import GameReducer from '../../redux/reducers/GameReducer';
+import RoomReducer from '../../redux/reducers/RoomReducer';
 import CharacterCards from './CharacterCards';
 
 import socket, { setOnBeginningGameCb, removeOnBeginningGameCb } from '../../socket-io';
@@ -67,14 +67,14 @@ class SetupPage extends Component {
 
 const mapStateToProps = function(state){
   return {
-    characterList: state.game.characterList,
+    characterList: state.room.characterList,
     users: state.room.users,
   }
 }
 
 const mapDispatchToProps = function(dispatch){
   return {
-    updateOneCharCount: GameReducer.Methods.updateOneCharCount(dispatch),
+    updateOneCharCount: RoomReducer.Methods.updateOneCharCount(dispatch),
   };
 }
 

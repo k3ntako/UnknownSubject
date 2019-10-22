@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import GameReducer from '../../redux/reducers/GameReducer';
 import RoomReducer from '../../redux/reducers/RoomReducer';
 
 import socket, { setOnJoinCb, removeOnJoinCb } from '../../socket-io';
@@ -162,7 +161,7 @@ const mapDispatchToProps = function(dispatch){
   return {
     addUsers: RoomReducer.Methods.addUsers(dispatch),
     setMyId: RoomReducer.Methods.setMyId(dispatch),
-    updateCharCounts: GameReducer.Methods.updateCharCounts(dispatch),
+    updateCharCounts: RoomReducer.Methods.updateCharCounts(dispatch),
   };
 }
 
