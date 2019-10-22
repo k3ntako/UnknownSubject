@@ -35,9 +35,10 @@ module.exports = (io, socket, rooms) => {
       //asign roles
       const roles = room.assignRoles();
       const stages = room.setStages();
-      const currentStage = room.nextStage();
 
-      io.in(socket.gameSession.roomId).emit('beginningGame', { roles, stages, currentStage });
+      const [currentStage, allPlayersSynced] = room.nextStage(socket.gameSession.userId, room.currentStage);      
+
+      io.in(socket.gameSession.roomId).emit('beginningGame', { roles, stages, currentStage, allPlayersSynced });
     } catch (e) {
       console.error(e);
       io.in(socket.gameSession.roomId).emit('error', { message: e.message });

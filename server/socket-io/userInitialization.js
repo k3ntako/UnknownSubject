@@ -3,6 +3,7 @@ const defaultUser = ( id, name ) => ({ // function removes reference
   id: id,
   name: name,
   role: null,
+  stage: "0=gameSetup",
 });
 
 module.exports = (io, socket, rooms) => {

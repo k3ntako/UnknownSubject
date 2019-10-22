@@ -8,7 +8,7 @@ const Types = {
   SET_MY_ID: 'SET_MY_ID',
   SET_MY_ROLE: 'SET_MY_ROLE',
   SET_ROLES_AND_STAGES: 'SET_ROLES_AND_STAGES',
-  SET_ALL_PLAYERS_LOADED: 'SET_ALL_PLAYERS_LOADED',
+  SET_ALL_PLAYERS_SYNCED: 'SET_ALL_PLAYERS_SYNCED',
   UPDATE_CHAR_COUNTS: 'UPDATE_CHAR_COUNTS',
   SET_CURRENT_STAGE: 'SET_CURRENT_STAGE',
 };
@@ -28,7 +28,7 @@ const initialState = {
   roles: initialRoles(),
   users: [],
   unassignedRoles: [],
-  allPlayersLoaded: false,
+  allPlayersSynced: false,
 };
 
 //Reducer
@@ -66,10 +66,11 @@ const RoomReducer = (state = initialState, action) => {
         roles: newRoles,
         unassignedRoles: action.roles.unassigned,
         stages: action.stages,
+        allPlayersSynced: action.allPlayersSynced,
       });
-    case Types.SET_ALL_PLAYERS_LOADED:
+    case Types.SET_ALL_PLAYERS_SYNCED:
       return Object.assign({}, state, {
-        allPlayersLoaded: action.allPlayersLoaded,
+        allPlayersSynced: action.allPlayersSynced,
       });
     case Types.UPDATE_CHAR_COUNTS:
       const newCharList = Object.assign({}, state.characterList, action.characterList);
@@ -78,7 +79,8 @@ const RoomReducer = (state = initialState, action) => {
       });
     case Types.SET_CURRENT_STAGE:
       return Object.assign({}, state, {
-        currentStage: action.stage,
+        currentStage: action.currentStage,
+        allPlayersSynced: action.allPlayersSynced,
       });
     default:
       return state;
@@ -113,20 +115,21 @@ RoomReducer.Methods = {
     }
   },
   setRolesAndStages: (dispatch) => {
-    return ( roles, stages, currentStage ) => { 
+    return (roles, stages, currentStage, allPlayersSynced) => { 
       dispatch({
         type: RoomReducer.Types.SET_ROLES_AND_STAGES,
         roles: roles,
         stages: stages,
         currentStage: currentStage,
+        allPlayersSynced: allPlayersSynced,
       });
     }
   },
-  setAllPlayersLoaded: (dispatch) => {
-    return ( allPlayersLoaded ) => {
+  setAllPlayersSynced: (dispatch) => {
+    return ( allPlayersSynced ) => {
       dispatch({
-        type: RoomReducer.Types.SET_ALL_PLAYERS_LOADED,
-        allPlayersLoaded: allPlayersLoaded,
+        type: RoomReducer.Types.SET_ALL_PLAYERS_SYNCED,
+        allPlayersSynced: allPlayersSynced,
       });
     }
   },
@@ -149,10 +152,11 @@ RoomReducer.Methods = {
     }
   },
   setCurrentStage: (dispatch) => {
-    return (currentStage) => {      
+    return (currentStage, allPlayersSynced) => {
       return dispatch({
         type: Types.SET_CURRENT_STAGE,
         currentStage: currentStage,
+        allPlayersSynced: allPlayersSynced
       })
     }
   },

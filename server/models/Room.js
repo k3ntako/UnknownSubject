@@ -6,7 +6,6 @@ class Room {
     this.creatorId = creator.id;
     this.users = [ creator ];
     this.userIds = [ creator.id ];
-    this.loadedUsers = [];
     this.currentStage = "0=gameSetup";
     this.stages = ["0=gameSetup", "1=nonOrderAffecting"];
     this.characterList = {
@@ -50,7 +49,6 @@ class Room {
     if( userExists ){
       this.users = this.users.filter(user => user.id !== id);
       this.users = this.userIds.filter(userId => userId !== id);
-      this.loadedUsers = this.loadedUsers.filter(user => user.id !== id);
     }
 
     return userExists;
@@ -112,14 +110,36 @@ class Room {
       }
     });
 
+    const lastStage = this.stages[this.stages.length - 1]
+    if (characterList.witness && lastStage.includes("=nonOrderAffecting") ){
+      // witness usually will view their card during the stage after nonOrderAffecting
+      // however, if there are no stages following it, a stage for the witness must be added
+      this.stages.push("witness");
+    }
+
+    this.stages.push("1000=done");
+
     return this.stages;
   }
 
-  nextStage(){
-    const currentStageIndex = this.stages.indexOf(this.currentStage);
-    this.currentStage = this.stages[currentStageIndex + 1];
+  nextStage(playerId, stageFinished){
+    const stageFinishedIdx = this.stages.indexOf(stageFinished);
 
-    return this.currentStage;
+    if(stageFinished === this.currentStage){
+      // if stageFinished is equal to currentStage, move server onto next stage
+      this.currentStage = this.stages[stageFinishedIdx + 1];
+    }else if (this.stages[stageFinishedIdx + 1] !== this.currentStage){
+      // stageFinished is not equal to current stage (because of if statement above)
+      // stageFinished should be the stage previous to currentStage
+      throw new Error("Stage finished sent by client is not the one prior to current stage on server");
+    }
+
+    const me = this.users.find(user => user.id === playerId);
+    
+    me.stage = this.currentStage;
+
+    const allPlayersSynced = !this.users.some(user => user.stage !== this.currentStage);
+    return [this.currentStage, allPlayersSynced];
   }
 
   roleCount(){
@@ -128,14 +148,6 @@ class Room {
 
   validRoles(){
     return this.roleCount() === this.users.length + 3; //add more validations
-  }
-
-  playerLoaded(id){
-    if( !this.loadedUsers.includes(id)){
-      this.loadedUsers.push(id);
-    }
-
-    return this.loadedUsers.length === this.users.length;
   }
 }
 

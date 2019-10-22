@@ -11,7 +11,7 @@ const initialize = ( socket ) => {
   });
 
   socket.on('beginningGame', (data) => {
-    RoomReducer.Methods.setRolesAndStages(store.dispatch)( data.roles, data.stages, data.currentStage );
+    RoomReducer.Methods.setRolesAndStages(store.dispatch)( data.roles, data.stages, data.currentStage, data.allPlayersSynced );
     onBeginningGameCb();
   });
 }

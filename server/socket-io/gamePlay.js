@@ -1,21 +1,10 @@
 module.exports = (io, socket, rooms) => {
-  socket.on('playerLoaded', function (data) {
-    let allPlayersLoaded = false;
-    if( rooms.rooms[ socket.gameSession.roomId ] ){
-      allPlayersLoaded = rooms.rooms[ socket.gameSession.roomId ].playerLoaded( socket.gameSession.userId );
-    }else{
-      console.error("Room doesn't exist");
-    }
-
-    if( allPlayersLoaded ){
-      io.in(socket.gameSession.roomId).emit('allPlayersLoaded');
-    }
-  });
-
-  socket.on('stageDone', function () {
+  socket.on('stageDone', function (data) {
     const room = rooms.rooms[socket.gameSession.roomId];
-    const currentStage = room.nextStage();
+    if (!room) throw new Error("Room doesn't exist");
     
-    io.in(socket.gameSession.roomId).emit('nextStage', { currentStage });
+    const [currentStage, allPlayersSynced] = room.nextStage(socket.gameSession.userId, data.stageFinished);
+
+    io.in(socket.gameSession.roomId).emit('nextStage', { currentStage, allPlayersSynced });
   });
 }

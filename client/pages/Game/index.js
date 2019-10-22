@@ -47,35 +47,50 @@ class GamePage extends Component {
   componentDidUpdate(){
     if (!this.state.hasEmitted && this.state.myCharacter) {
       this.setState({ hasEmitted: true }, this.playerLoaded)
+    } else if (this.props.currentStage === "1000=done"){      
+      const roomId = this.props.match.params.roomId;
+      this.props.history.push(`/room/${roomId}/done`);
     }
   }
 
+  componentWillUnmount(){
+    clearInterval(this.timer);
+  }
+
   playerLoaded(){
-    socket.emit('playerLoaded');
+    socket.emit('stageDone', {
+      stageFinished: this.props.currentStage,
+    });
     this.startTimer();
   }
 
-  startTimer = () => {
+  startTimer = () => {    
     this.timeLeft = 15;
-    this.timer = setInterval(() => {
+    this.timer = setInterval(() => {      
       this.timeLeft--;
       this.forceUpdate();        
       if (this.timeLeft < 0) {
-        clearInterval(this.timer);
-        this.setState({ timerFinished: true });
+        this.onDone();
       }
     }, 1000);
   }
 
-  onDone = () => {    
-    socket.emit('stageDone');
+  onDone = () => {
+    clearInterval(this.timer);
+    this.timeLeft = 0;
+
+    socket.emit('stageDone', {
+      stageFinished: this.props.currentStage,
+    });
+
+    this.setState({ timerFinished: true });
   }
 
   render(){
     const { myCharacter, timerFinished, message, hasEmitted } = this.state;
-    const { users, unassignedRoles, allPlayersLoaded } = this.props;      
+    const { users, unassignedRoles, allPlayersSynced } = this.props;      
     
-    if (!myCharacter /*|| timerFinished*/ || !allPlayersLoaded || !hasEmitted){
+    if (!myCharacter /*|| timerFinished*/ || !allPlayersSynced || !hasEmitted){
       return <Loading />;
     }
 
@@ -96,7 +111,7 @@ class GamePage extends Component {
 
 const mapStateToProps = function(state){
   return {
-    allPlayersLoaded: state.room.allPlayersLoaded,
+    allPlayersSynced: state.room.allPlayersSynced,
     myId: state.room.myId,
     myRole: state.room.myRole,
     roles: state.room.roles,
