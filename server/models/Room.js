@@ -111,7 +111,7 @@ class Room {
     });
 
     const lastStage = this.stages[this.stages.length - 1]
-    if (characterList.witness && lastStage.includes("=nonOrderAffecting") ){
+    if (this.characterList.witness && lastStage.includes("=nonOrderAffecting") ){
       // witness usually will view their card during the stage after nonOrderAffecting
       // however, if there are no stages following it, a stage for the witness must be added
       this.stages.push("witness");

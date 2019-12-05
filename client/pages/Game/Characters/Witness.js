@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+
 import Cards from '../Cards';
 
 class Witness extends Component {
@@ -39,6 +42,11 @@ class Witness extends Component {
 
   render() {
     const { assignedSelected, unassignedSelected, selectAssignedMax, selectUnassignedMax } = this.state;
+    const nonOrderAffectingStage = this.props.stages.find(stage => stage.includes("=nonOrderAffecting"));
+    const nonOrderAffectingIdx = nonOrderAffectingStage.split("=")[0];
+    
+    const stageAfterNonOrderAffecting = this.props.stages[Number(nonOrderAffectingIdx) + 1];
+
     return <Cards
       assignedSelected={assignedSelected}
       unassignedSelected={unassignedSelected}
@@ -47,8 +55,21 @@ class Witness extends Component {
       users={this.props.users}
       unassignedRoles={this.props.unassignedRoles}
       onCardClick={this.onCardClick}
-      onDone={this.props.onDone} />
+      onDone={this.props.onDone} 
+      revealSelected={this.props.currentStage === stageAfterNonOrderAffecting}/>
   }
 }
 
-export default Witness;
+const mapStateToProps = function (state) {
+  return {
+    currentStage: state.room.currentStage,
+    stages: state.room.stages,
+  }
+}
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    null
+  )(Witness)
+);
